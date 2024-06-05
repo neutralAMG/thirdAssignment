@@ -13,10 +13,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             _appContext = appContext;
         }
-        public override async Task<bool> Exits(Func<AppointmentState, bool> filter)
-        {
-            return await base.Exits(filter);
-        }
+
 
         public override async Task<List<AppointmentState>> GetAll()
         {
@@ -25,23 +22,68 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         public override async Task<AppointmentState> GetById(Guid id)
         {
-            return await base.GetById(id);
+            try
+            {
+                if (await Exits(u => u.Id != id)) return null;
+
+                return await base.GetById(id);
+
+                //_appContext.AppointmentState.FirstOrDefaultAsync(u => u.Id == id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
         }
 
-        public override Task Save(AppointmentState entity)
+        public override async Task Save(AppointmentState entity)
         {
-            return base.Save(entity);
+            try
+            {
+                await base.Save(entity);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
 
         }
 
-        public override Task Update(AppointmentState entity)
+        public override async Task Update(AppointmentState entity)
         {
-            return base.Update(entity);
+            try
+            {
+                if (await Exits(d => d.Id != entity.Id)) return;
+
+                AppointmentState AppointmentStateToBeUpdated = await GetById(entity.Id);
+
+                AppointmentStateToBeUpdated.Name = entity.Name;
+
+                await base.Update(AppointmentStateToBeUpdated);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public override Task Delete(AppointmentState entity)
+        public override async Task Delete(AppointmentState entity)
         {
-            return base.Delete(entity);
+            try
+            {
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                AppointmentState AppointmentStateToBeDeleted = await GetById(entity.Id);
+
+                await base.Delete(AppointmentStateToBeDeleted);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+       
         }
     }
 }

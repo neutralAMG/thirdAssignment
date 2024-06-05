@@ -7,6 +7,7 @@ namespace thirdAssignment.Domain.Core
     public class BaseEntity
     {
         public string Name { get; set; }
+        public Guid Id = Guid.NewGuid();
     }
 
     public class ConsultingRoomStateBaseEntity : BaseEntity
@@ -25,7 +26,7 @@ namespace thirdAssignment.Domain.Core
     public class BaseNonUserLikeEntity : BaseUserLikeEntity
     {
         public string PhoneNumber { get; set; }
-        public string Cédula { get; set; }
+        public string Cedula { get; set; }
         public string? ImgPath { get; set; }
 
     }

@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Domain.Entities;
 using thirdAssignment.Infrastructure.Persistence.Core;
@@ -13,35 +14,94 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             _appContext = appContext;
         }
-        public override async Task<bool> Exits(Func<LabTest, bool> filter)
-        {
-            return await base.Exits(filter);
-        }
 
         public override async Task<List<LabTest>> GetAll()
         {
             return await base.GetAll();
+                
+                //_appContext.LabTests.
+                //Include(lt => lt.ConsultingRoom).ToListAsync();
+        }
+
+        public async Task<List<LabTest>> GetAll(Guid id)
+        {
+            return await _appContext.LabTests.Where(u => u.ConsultingRoomId == id).
+                Include(lt => lt.ConsultingRoom).ToListAsync();
         }
 
         public override async Task<LabTest> GetById(Guid id)
         {
-            return await base.GetById(id);
+            try
+            {
+                if (await Exits(lt => lt.Id != id)) return null;
+
+                return await base.GetById(id);
+                    
+                    //_appContext.LabTests.FirstOrDefaultAsync(u => u.Id == id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+          
         }
 
-        public override Task Save(LabTest entity)
+        public override async Task Save(LabTest entity)
         {
-            return base.Save(entity);
+            try
+            {
+                if (await Exits(lt => lt.Name == entity.Name)) return;
+
+                await base.Save(entity);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
         }
 
-        public override Task Update(LabTest entity)
+        public override async Task Update(LabTest entity)
         {
-            return base.Update(entity);
+            try
+            {
+                if (await Exits(lt => lt.Id != entity.Id)) return;
+
+                LabTest LabTestToBeUpdated = await GetById(entity.Id);
+
+                LabTestToBeUpdated.Name = entity.Name;
+
+                LabTestToBeUpdated.Description = entity.Description;
+                
+
+                await base.Update(LabTestToBeUpdated);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+           
         }
 
-        public override Task Delete(LabTest entity)
+        public override async Task Delete(LabTest entity)
         {
-            return base.Delete(entity);
+            try
+            {
+                if (await Exits(lt => lt.Id != entity.Id)) return;
+
+                LabTest LabTestToBeDeleted = await GetById(entity.Id);
+
+                await base.Delete(LabTestToBeDeleted);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+           
         }
+
+
     }
 }

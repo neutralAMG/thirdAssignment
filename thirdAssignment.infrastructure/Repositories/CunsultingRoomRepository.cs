@@ -14,11 +14,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        public override async Task<bool> Exits(Func<ConsultingRoom, bool> filter)
-        {
-            return await base.Exits(filter);
-        }
-
         public override async Task<List<ConsultingRoom>> GetAll()
         {
             return await base.GetAll();
@@ -26,23 +21,65 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         public override async Task<ConsultingRoom> GetById(Guid id)
         {
-            return await base.GetById(id);
+            try
+            {
+                if (await Exits(u => u.Id != id)) return null;
+
+                return await base.GetById(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public override Task Save(ConsultingRoom entity)
+        public override async Task Save(ConsultingRoom entity)
         {
-            return base.Save(entity);
+
+            try
+            {
+                await base.Save(entity);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
         }
 
-        public override Task Update(ConsultingRoom entity)
+        public override async Task Update(ConsultingRoom entity)
         {
-            return base.Update(entity);
+            try
+            {
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                ConsultingRoom ConsultingRoomToBeUpdated = await GetById(entity.Id);
+
+                ConsultingRoomToBeUpdated.Name = entity.Name;
+
+                await base.Update(ConsultingRoomToBeUpdated);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public override Task Delete(ConsultingRoom entity)
+        public override async Task Delete(ConsultingRoom entity)
         {
-            return base.Delete(entity);
+            try
+            {
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                ConsultingRoom ConsultingRoomToBeDeleted = await GetById(entity.Id);
+
+                await base.Delete(ConsultingRoomToBeDeleted);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

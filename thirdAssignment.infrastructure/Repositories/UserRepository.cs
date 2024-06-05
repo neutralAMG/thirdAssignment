@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Domain.Entities;
 using thirdAssignment.Infrastructure.Persistence.Core;
@@ -13,36 +14,118 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             _appContext = appContext;
         }
-        public override async Task<bool> Exits(Func<User, bool> filter)
-        {
-            return await base.Exits(filter);
-        }
 
         public override async Task<List<User>> GetAll()
         {
-            return await base.GetAll();
+
+            return await _appContext.Users.
+                Include(u => u.ConsultingRoom).ToListAsync();
         }
 
         public override async Task<User> GetById(Guid id)
         {
-            return await base.GetById(id);
+            try
+            {
+                if (await Exits(u => u.Id != id)) return null;
+
+                return await _appContext.Users.Include(u => u.ConsultingRoom).FirstOrDefaultAsync(u => u.Id == id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
-        public override Task Save(User entity)
+        public override async Task Save(User entity)
         {
-            return base.Save(entity);
+            try
+            {
+                if (await Exits(u => u.Name == entity.Name)) return;
+
+                if (await Exits(u => u.LastName == entity.LastName)) return;
+
+                if (await Exits(u => u.UserName == entity.UserName)) return;
+
+                if (await Exits(u => u.EMailAddress == entity.EMailAddress)) return;
+
+                await base.Save(entity);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
 
         }
 
-        public override Task Update(User entity)
+        public override async Task Update(User entity)
         {
-            return base.Update(entity);
+
+            try
+            {
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                User UserToBeUpdated = await GetById(entity.Id);
+
+                UserToBeUpdated.EMailAddress = entity.EMailAddress;
+
+                UserToBeUpdated.Name = entity.Name;
+
+                UserToBeUpdated.LastName = entity.LastName;
+
+                UserToBeUpdated.Password = entity.Password;
+
+                UserToBeUpdated.UserName = entity.UserName;
+
+                await base.Update(UserToBeUpdated);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
-        public override Task Delete(User entity)
+        public override async Task Delete(User entity)
         {
-            return base.Delete(entity);
+            try
+            {
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                User UserToBeDeleted = await GetById(entity.Id);
+
+                await base.Delete(UserToBeDeleted);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
+        public async Task<User> Login(string username, string password)
+        {
+            try
+            {
+                if (await Exits(u => u.UserName != username || u.Password != password)) return null;
+
+                return await _appContext.Users.FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+
+        }
+
+        public async Task<List<User>> GetAll(Guid id)
+        {
+            return await _appContext.Users.Where(u => u.ConsultingRoomId == id).
+                 Include(u => u.ConsultingRoom).ToListAsync();
+        }
     }
 }

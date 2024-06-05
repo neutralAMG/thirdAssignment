@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Domain.Entities;
 using thirdAssignment.Infrastructure.Persistence.Core;
@@ -14,35 +15,97 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        public override async Task<bool> Exits(Func<Doctor, bool> filter)
-        {
-            return await base.Exits(filter);
-        }
 
         public override async Task<List<Doctor>> GetAll()
         {
-            return await base.GetAll();
+           return await base.GetAll();
+                
+                //_appContext.Doctors.
+                //Include(u => u.ConsultingRoom).ToListAsync();
+        }
+        public async Task<List<Doctor>> GetAll(Guid id)
+        {
+            return await _appContext.Doctors.Where(u => u.ConsultingRoomId == id).
+                 Include(u => u.ConsultingRoom).ToListAsync();
         }
 
         public override async Task<Doctor> GetById(Guid id)
         {
-            return await base.GetById(id);
+            try
+            {
+                if (await Exits(d => d.Id != id)) return null;
+
+                return await base.GetById(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
         }
 
-        public override Task Save(Doctor entity)
+        public override async Task Save(Doctor entity)
         {
-            return base.Save(entity);
+            try
+            {
+                await base.Save(entity);
 
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+          
         }
 
-        public override Task Update(Doctor entity)
+        public override async Task Update(Doctor entity)
         {
-            return base.Update(entity);
+
+            try
+            {
+                if (await Exits(d => d.Id != entity.Id)) return;
+
+                Doctor DoctorToBeUpdated = await GetById(entity.Id);
+
+                DoctorToBeUpdated.EMailAddress = entity.EMailAddress;
+
+                DoctorToBeUpdated.Name = entity.Name;
+
+                DoctorToBeUpdated.LastName = entity.LastName;
+
+                DoctorToBeUpdated.PhoneNumber = entity.PhoneNumber;
+
+                DoctorToBeUpdated.Cedula = entity.Cedula;
+
+                DoctorToBeUpdated.ImgPath = entity.ImgPath;
+
+
+                await base.Update(DoctorToBeUpdated);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+         
         }
 
-        public override Task Delete(Doctor entity)
+        public override async Task Delete(Doctor entity)
         {
-            return base.Delete(entity);
+            try
+            {
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                Doctor DoctorToBeDeleted = await GetById(entity.Id);
+
+                await base.Delete(DoctorToBeDeleted);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+           
         }
+
+
     }
 }

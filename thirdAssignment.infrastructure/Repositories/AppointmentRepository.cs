@@ -1,11 +1,12 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Domain.Entities;
 using thirdAssignment.Infrastructure.Persistence.Core;
 
 namespace thirdAssignment.Infrastructure.Persistence.Repositories
 {
-    public class AppointmentRepository : BaseRepository<AppointmentState>, IAppointmentStateRepository
+    public class AppointmentRepository : BaseRepository<Appointment>, IAppointmentRepository
     {
         private readonly Context.AppContext _appContext;
 
@@ -14,35 +15,74 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        public override async Task<bool> Exits(Func<AppointmentState, bool> filter)
-        {
-            return await base.Exits(filter);
-        }
 
-        public override async Task<List<AppointmentState>> GetAll()
+        public override async Task<List<Appointment>> GetAll()
         {
             return await base.GetAll();
         }
 
-        public override async Task<AppointmentState> GetById(Guid id)
+        public override async Task<Appointment> GetById(Guid id)
         {
-            return await base.GetById(id);
+            try
+            {
+                if (await Exits(d => d.Id != id)) return null;
+
+                return await base.GetById(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+           
+        }        
+        
+      public async Task<List<Appointment>> GetAll(Guid id)
+        {
+            return await _appContext.Appointments.Where(u => u.ConsultingRoomId == id).
+               Include(u => u.ConsultingRoom).ToListAsync();
+            
+        }
+   
+
+        public override async Task Save(Appointment entity)
+        {
+            try
+            {
+                await base.Save(entity);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+           
+
         }
 
-        public override Task Save(AppointmentState entity)
+        public override async Task Update(Appointment entity)
         {
-            return base.Save(entity);
 
+            await base.Update(entity);
         }
 
-        public override Task Update(AppointmentState entity)
+        public override async Task Delete(Appointment entity)
         {
-            return base.Update(entity);
+            try
+            {
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                Appointment AppointmentToBeDeleted = await GetById(entity.Id);
+
+                await base.Delete(AppointmentToBeDeleted);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public override Task Delete(AppointmentState entity)
-        {
-            return base.Delete(entity);
-        }
+
+  
+
     }
 }

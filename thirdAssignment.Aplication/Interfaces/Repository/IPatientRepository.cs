@@ -5,7 +5,8 @@ using thirdAssignment.Domain.Entities;
 
 namespace thirdAssignment.Aplication.Interfaces.Repository
 {
-    public interface IPatientRepository : IBaseRepository<Patient>
+    public interface IPatientRepository : IBaseRepository<Patient>,  IGetWithCunsultingRoomId<Patient>
     {
+        
     }
 }

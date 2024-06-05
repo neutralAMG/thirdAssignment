@@ -8,13 +8,11 @@ namespace thirdAssignment.Domain.Entities
         
         public Appointment()
         {
-            AppointmentDate = DateOnly.FromDateTime(Date);
-            AppointmentTime = TimeOnly.FromDateTime(Date);
+
             Name = $" Apointment for {Patient.Name} made in {AppointmentDate} on {AppointmentTime}";
         }
 
-        private readonly DateTime Date = DateTime.Now;   
-        public Guid AppointmentsId { get; set; }
+
         public DateOnly AppointmentDate {  get; set; }
         public TimeOnly AppointmentTime {  get; set; }
         public string AppointmentCause { get; set; }

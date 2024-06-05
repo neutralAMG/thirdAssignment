@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Domain.Entities;
 using thirdAssignment.Infrastructure.Persistence.Core;
@@ -14,35 +15,79 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        public override async Task<bool> Exits(Func<UserRol, bool> filter)
-        {
-            return await base.Exits(filter);
-        }
 
-        public  override async Task<List<UserRol>> GetAll()
+
+        public override async Task<List<UserRol>> GetAll()
         {
             return await base.GetAll();
         }
 
         public override async Task<UserRol> GetById(Guid id)
         {
-            return await base.GetById(id);
+            try
+            {
+                if (await Exits(u => u.Id != id)) return null;
+                return await base.GetById(id);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+
         }
 
-        public override Task Save(UserRol entity)
+        public override async Task Save(UserRol entity)
         {
-            return base.Save(entity);
+            try
+            {
+
+                await base.Save(entity);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
         }
 
-        public override Task Update(UserRol entity)
+        public override async Task Update(UserRol entity)
         {
-            return base.Update(entity);
+            try
+            {
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                UserRol UserRolToBeUpdated = await GetById(entity.Id);
+
+                UserRolToBeUpdated.Name = entity.Name;
+
+                await base.Update(UserRolToBeUpdated);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
-        public override Task Delete(UserRol entity)
+        public override async Task Delete(UserRol entity)
         {
-          return base.Delete(entity);
+            try
+            {
+
+                if (await Exits(u => u.Id != entity.Id)) return;
+
+                UserRol UserRolToBeDeleted = await GetById(entity.Id);
+
+                await base.Delete(UserRolToBeDeleted);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
 
