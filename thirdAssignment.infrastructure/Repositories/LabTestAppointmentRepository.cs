@@ -23,6 +23,10 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
              //Include(u => u.ConsultingRoom).ToListAsync();
         }
 
+        public async Task<List<LabTestAppointment>> GetAll(Guid id)
+        {
+            return await _appContext.LabtestAppointments.Where(u => u.ConsultingRoomId == id).ToListAsync();
+        }
         public override async Task<LabTestAppointment> GetById(Guid id)
         {
             try
@@ -93,9 +97,10 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
            
         }
 
-        public async Task<List<LabTestAppointment>> FilteryCedula(string cedulaa)
+        public async Task<List<LabTestAppointment>> FilterByCedula(string cedulaa)
         {
             return await _appContext.LabtestAppointments.Where(l => l.patient.Cedula ==  cedulaa || l.IsNotPending == false).ToListAsync();
         }
+
     }
 }

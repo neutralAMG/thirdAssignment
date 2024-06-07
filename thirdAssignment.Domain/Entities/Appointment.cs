@@ -22,7 +22,6 @@ namespace thirdAssignment.Domain.Entities
         public Guid PatientId { get; set; }
         public Guid ConsultingRoomId { get; set; }
 
-        public ConsultingRoom ConsultingRoom { get; set; }
 
         public Doctor Doctor { get; set; }
         public Patient Patient { get; set; }    

@@ -23,8 +23,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         }
         public  async Task<List<Patient>> GetAll(Guid id)
         {
-            return await _appContext.Patients.Where(u => u.ConsultingRoomId == id).
-                 Include(u => u.ConsultingRoom).ToListAsync();
+            return await _appContext.Patients.Where(u => u.ConsultingRoomId == id).ToListAsync();
         }
 
         public override async Task<Patient> GetById(Guid id)
@@ -33,7 +32,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             {
                 if (await Exits(u => u.Id != id)) return null;
 
-                return await _appContext.Patients.FirstOrDefaultAsync(u => u.Id == id);
+                return await base.GetById(id);
+                    //_appContext.Patients.FirstOrDefaultAsync(u => u.Id == id);
             }
             catch (Exception ex)
             {

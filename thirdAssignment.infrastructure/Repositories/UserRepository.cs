@@ -19,7 +19,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
 
             return await _appContext.Users.
-                Include(u => u.ConsultingRoom).ToListAsync();
+                Include(u => u.ConsultingRoom).Include(u => u.UserRol).ToListAsync();
         }
 
         public override async Task<User> GetById(Guid id)
@@ -28,7 +28,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             {
                 if (await Exits(u => u.Id != id)) return null;
 
-                return await _appContext.Users.Include(u => u.ConsultingRoom).FirstOrDefaultAsync(u => u.Id == id);
+                return await _appContext.Users.Include(u => u.ConsultingRoom)
+                    .Include(u => u.UserRol).FirstOrDefaultAsync(u => u.Id == id);
             }
             catch (Exception ex)
             {
@@ -111,7 +112,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             {
                 if (await Exits(u => u.UserName != username || u.Password != password)) return null;
 
-                return await _appContext.Users.FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
+                return await _appContext.Users.Include(u => u.ConsultingRoom)
+                    .Include(u => u.UserRol)
+                    .FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
 
             }
             catch (Exception ex)

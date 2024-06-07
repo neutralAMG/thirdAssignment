@@ -4,8 +4,8 @@ using thirdAssignment.Domain.Entities;
 
 namespace thirdAssignment.Aplication.Interfaces.Repository
 {
-    public interface ILabTestAppointmentRepository : IBaseRepository<LabTestAppointment>
+    public interface ILabTestAppointmentRepository : IBaseRepository<LabTestAppointment>, IGetWithCunsultingRoomId<LabTestAppointment>
     {
-        Task<List<LabTestAppointment>> FilteryCedula(string cedulaa);
+        Task<List<LabTestAppointment>> FilterByCedula(string cedulaa);
     }
 }
