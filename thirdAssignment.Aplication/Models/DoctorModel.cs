@@ -12,7 +12,7 @@ namespace thirdAssignment.Aplication.Models
         public string PhoneNumber { get; set; }
         public string Cedula { get; set; }
         public string? ImgPath { get; set; }
-        public Guid ConsultingRoomId { get; set; }
-        public ConsultingRoomModel ConsultingRoom { get; set; }
+    //    public Guid ConsultingRoomId { get; set; }
+      //  public ConsultingRoomModel ConsultingRoom { get; set; }
     }
 }

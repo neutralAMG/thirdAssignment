@@ -16,10 +16,10 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         }
 
 
-        public override async Task<List<Appointment>> GetAll()
-        {
-            return await base.GetAll();
-        }
+        //public override async Task<List<Appointment>> GetAll()
+        //{
+        //    return await base.GetAll();
+        //}
 
         public override async Task<Appointment> GetById(Guid id)
         {
@@ -27,7 +27,11 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             {
                 if (await Exits(d => d.Id != id)) return null;
 
-                return await base.GetById(id);
+                return await _appContext.Appointments.Where(u => u.ConsultingRoomId == id).
+               Include(u => u.ConsultingRoom)
+               .Include(a => a.Doctor)
+               .Include(a => a.Patient)
+               .Include(a => a.labTestAppointments).FirstOrDefaultAsync( a => a.Id == id);
             }
             catch (Exception ex)
             {
@@ -39,7 +43,10 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
       public async Task<List<Appointment>> GetAll(Guid id)
         {
             return await _appContext.Appointments.Where(u => u.ConsultingRoomId == id).
-               Include(u => u.ConsultingRoom).ToListAsync();
+               Include(u => u.ConsultingRoom)
+               .Include(a => a.Doctor)
+               .Include(a => a.Patient)
+               .Include(a => a.labTestAppointments).ToListAsync();
             
         }
    

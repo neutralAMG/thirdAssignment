@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using thirdAssignment.Aplication.Core;
 
 namespace thirdAssignment.Infrastructure.Persistence.Core
@@ -19,10 +20,14 @@ namespace thirdAssignment.Infrastructure.Persistence.Core
           return await Task.FromResult( _Entities.Any(filter));
         }
          
-        public virtual async Task<List<Tentity>> GetAll()
-        {
-            return await _Entities.ToListAsync();
-        }
+        //public virtual async Task<List<Tentity>> GetAll(Func<Tentity, bool> GetEntty)
+        //{
+        //    return await Task.FromResult(_Entities.Where(GetEntty).ToList());
+        //}
+        //public virtual async Task<List<Tentity>> GetAll()
+        //{
+        //    return await _Entities.ToListAsync();
+        //}
 
         public virtual async Task<Tentity> GetById(Guid id)
         {

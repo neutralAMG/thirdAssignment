@@ -3,9 +3,10 @@ using thirdAssignment.Domain.Core;
 
 namespace thirdAssignment.Domain.Entities
 {
-    public class AppointmentState : BaseEntity
+    public class AppointmentState
     {
-
+        public string Name { get; set; }
+        public int Id { get; set; }
         public IList<Appointment> appointments { get; set; }
     }
 }

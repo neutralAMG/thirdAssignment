@@ -16,11 +16,11 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         }
 
 
-        public override async Task<List<Patient>> GetAll()
-        {
-            return await _appContext.Patients.
-                Include(u => u.ConsultingRoom).ToListAsync();
-        }
+        //public override async Task<List<Patient>> GetAll()
+        //{
+        //    return await _appContext.Patients.
+        //        Include(u => u.ConsultingRoom).ToListAsync();
+        //}
         public  async Task<List<Patient>> GetAll(Guid id)
         {
             return await _appContext.Patients.Where(u => u.ConsultingRoomId == id).ToListAsync();

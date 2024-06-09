@@ -12,9 +12,9 @@ namespace thirdAssignment.Aplication.Models
         public string AppointmentCause { get; set; }
 
         public int AppointmentStateId { get; set; }
-        public Guid DoctorId { get; set; }
-        public Guid PatientId { get; set; }
-        public Guid ConsultingRoomId { get; set; }
+      //  public Guid DoctorId { get; set; }
+     //   public Guid PatientId { get; set; }
+    //    public Guid ConsultingRoomId { get; set; }
 
         public ConsultingRoomModel ConsultingRoom { get; set; }
 

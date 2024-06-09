@@ -15,13 +15,13 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        public override async Task<List<LabTest>> GetAll()
-        {
-            return await base.GetAll();
+        //public override async Task<List<LabTest>> GetAll()
+        //{
+        //    return await base.GetAll();
                 
-                //_appContext.LabTests.
-                //Include(lt => lt.ConsultingRoom).ToListAsync();
-        }
+        //        //_appContext.LabTests.
+        //        //Include(lt => lt.ConsultingRoom).ToListAsync();
+        //}
 
         public async Task<List<LabTest>> GetAll(Guid id)
         {

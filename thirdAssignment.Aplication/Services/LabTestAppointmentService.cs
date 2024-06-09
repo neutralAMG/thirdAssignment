@@ -1,42 +1,97 @@
 ﻿
+using AutoMapper;
+using System.Collections.Generic;
 using thirdAssignment.Aplication.Core;
+using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
+using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Utils.ResultMessages;
+using thirdAssignment.Domain.Entities;
 
 namespace thirdAssignment.Aplication.Services
 {
-    public class LabTestAppointmentService : ILabTestAppointmentService
+    public class LabTestAppointmentService : BaseService<SaveLabTestAppointmentDto, UpdateLabTestDto, LabTestAppointmentModel, LabTestAppointment>, ILabTestAppointmentService
     {
+        private readonly ILabTestAppointmentRepository _testAppointmentRepository;
+        private readonly IMapper _mapper;
 
-        public Task<Result<List<LabTestAppointmentModel>>> FilterByCedula(string cedulaa)
+        private readonly ResultMessages _messages;
+        public LabTestAppointmentService(ILabTestAppointmentRepository labTestAppointmentRepository, IMapper mapper) : base(labTestAppointmentRepository, mapper, new ResultMessages("Lab test's"))
         {
-            throw new NotImplementedException();
+            _testAppointmentRepository = labTestAppointmentRepository;
+            _mapper = mapper;
+            _messages = new("User");
         }
 
-        public Task<Result<List<LabTestAppointmentModel>>> GetAll(Guid id)
+
+        public async Task<Result<List<LabTestAppointmentModel>>> GetAll(Guid id)
         {
-            throw new NotImplementedException();
+            Result<List<LabTestAppointmentModel>> result = new();
+            try
+            {
+                List<LabTestAppointment> LabTestGetted = await _testAppointmentRepository.GetAll(id);
+
+                result.Data = _mapper.Map<List<LabTestAppointmentModel>>(LabTestGetted);
+
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Success];
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Error];
+                return result;
+                throw;
+            }
         }
 
-        public Task<Result<LabTestAppointmentModel>> GetById(Guid id)
+
+        public async Task<Result<List<LabTestAppointmentModel>>> FilterByCedula(string cedulaa)
         {
-            throw new NotImplementedException();
+            Result<List<LabTestAppointmentModel>> result = new();
+            try
+            {
+                List<LabTestAppointment> filteredLabTestAppoinments = await _testAppointmentRepository.FilterByCedula(cedulaa);
+
+                result.Data = _mapper.Map<List<LabTestAppointmentModel>>(filteredLabTestAppoinments);
+
+                result.Message = _messages.ResultMessage[TypeOfOperation.Filter][State.Success];
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Error];
+                return result;
+                throw;
+            }
+
+
         }
 
-        public Task<Result<LabTestAppointmentModel>> Save(LabTestAppointmentModel entity)
+        public async Task<Result<List<LabTestAppointmentModel>>> GetAllPending(Guid id)
         {
-            throw new NotImplementedException();
-        }
+            Result<List<LabTestAppointmentModel>> result = new();
+            try
+            {
+                List<LabTestAppointment> LabTestGetted = await _testAppointmentRepository.GetAllPending(id);
 
-        public Task<Result<LabTestAppointmentModel>> Update(LabTestAppointmentModel entity)
-        {
-            throw new NotImplementedException();
-        }        
-        
-        public Task<Result<LabTestAppointmentModel>> Delete(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+                result.Data = _mapper.Map<List<LabTestAppointmentModel>>(LabTestGetted);
 
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Success];
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Error];
+                return result;
+                throw;
+            }
+        }
     }
 }

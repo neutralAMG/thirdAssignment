@@ -15,12 +15,12 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        public override async Task<List<User>> GetAll()
-        {
+        //public override async Task<List<User>> GetAll()
+        //{
 
-            return await _appContext.Users.
-                Include(u => u.ConsultingRoom).Include(u => u.UserRol).ToListAsync();
-        }
+        //    return await _appContext.Users.
+        //        Include(u => u.ConsultingRoom).Include(u => u.UserRol).ToListAsync();
+        //}
 
         public override async Task<User> GetById(Guid id)
         {
@@ -51,7 +51,37 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 if (await Exits(u => u.EMailAddress == entity.EMailAddress)) return;
 
                 await base.Save(entity);
+                 await _appContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
+
+        }
+
+        public async Task Register(User entity)
+        {
+            try
+            {
+                if (await Exits(u => u.Name == entity.Name)) return;
+
+                if (await Exits(u => u.LastName == entity.LastName)) return;
+
+                if (await Exits(u => u.UserName == entity.UserName)) return;
+
+                if (await Exits(u => u.EMailAddress == entity.EMailAddress)) return;
+
+                ConsultingRoom consultingRoom = new ConsultingRoom { Name = entity.ConsultingRoomName };
+
+                _appContext.ConsultingRooms.Add(consultingRoom);
+
+                entity.ConsultingRoomId = consultingRoom.Id;
+
+                await base.Save(entity);
+
+                await _appContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {

@@ -15,17 +15,31 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        public override async Task<List<LabTestAppointment>> GetAll()
-        {
-            return await Task.FromResult( base.GetAll().Result.Where( l => l.IsNotPending == false).ToList());
-                
-             //   _appContext.LabtestAppointments.
-             //Include(u => u.ConsultingRoom).ToListAsync();
-        }
+        //public override async Task<List<LabTestAppointment>> GetAll()
+        //{
+        //    return await Task.FromResult( base.GetAll().Result.Where( l => l.IsNotPending == false).ToList());
+
+        //     //   _appContext.LabtestAppointments.
+        //     //Include(u => u.ConsultingRoom).ToListAsync();
+        //}
 
         public async Task<List<LabTestAppointment>> GetAll(Guid id)
         {
-            return await _appContext.LabtestAppointments.Where(u => u.ConsultingRoomId == id).ToListAsync();
+            return await _appContext.LabtestAppointments
+                .Where(u => u.ConsultingRoomId == id)
+                .Include(l => l.LabTest)
+                .Include(l => l.Doctor)
+                .Include(l => l.appointment)
+                .ToListAsync();
+        }
+        public async Task<List<LabTestAppointment>> GetAllPending(Guid id)
+        {
+            return await _appContext.LabtestAppointments
+                .Where(u => u.ConsultingRoomId == id || u.IsNotPending == false)
+                .Include(l => l.LabTest)
+                .Include(l => l.Doctor)
+                .Include(l => l.appointment)
+                .ToListAsync();
         }
         public override async Task<LabTestAppointment> GetById(Guid id)
         {
@@ -33,15 +47,21 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             {
                 if (await Exits(u => u.Id != id)) return null;
 
-                return await base.GetById(id);
-                    
-                    //_appContext.LabtestAppointments.FirstOrDefaultAsync(u => u.Id == id);
+                return await _appContext.LabtestAppointments
+                        .Where(u => u.ConsultingRoomId == id)
+                        .Include(l => l.LabTest)
+                         .Include(l => l.Doctor)
+                         .Include(l => l.appointment)
+                         .FirstOrDefaultAsync(l => l.Id == id);
+                //  return await base.GetById(id);
+
+                //_appContext.LabtestAppointments.FirstOrDefaultAsync(u => u.Id == id);
             }
             catch (Exception ex)
             {
                 throw;
             }
-           
+
         }
 
         public override async Task Save(LabTestAppointment entity)
@@ -94,12 +114,15 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             {
                 throw;
             }
-           
+
         }
 
         public async Task<List<LabTestAppointment>> FilterByCedula(string cedulaa)
         {
-            return await _appContext.LabtestAppointments.Where(l => l.patient.Cedula ==  cedulaa || l.IsNotPending == false).ToListAsync();
+            return await _appContext.LabtestAppointments.Where(l => l.Patient.Cedula == cedulaa || l.IsNotPending == false)
+                          .Include(l => l.LabTest)
+                         .Include(l => l.Doctor)
+                         .Include(l => l.appointment).ToListAsync();
         }
 
     }

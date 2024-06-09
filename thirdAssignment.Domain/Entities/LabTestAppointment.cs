@@ -1,4 +1,5 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
 using thirdAssignment.Domain.Core;
 
 namespace thirdAssignment.Domain.Entities
@@ -12,15 +13,20 @@ namespace thirdAssignment.Domain.Entities
         }
         public Guid LabTestAppointmentId { get; set; }
         public Guid AppointmetId { get; set; }
-        public Guid labTesttId { get; set; }
+        public Guid LabTesttId { get; set; }
+        public Guid DoctorsId { get; set; }
+        public Guid PatientId { get; set; }
         public bool IsNotPending { get; set; }
         public string TestResult { get; set; }
 
-        public Guid ConsultingRoomId { get; set; }
-
+        [ForeignKey("AppointmetId")]
         public Appointment appointment { get; set; }
-        public Patient patient { get; set; }
-        public LabTest labTest { get; set; }
+        [ForeignKey("PatientId")]
+        public Patient Patient { get; set; }
+        [ForeignKey("DoctorsId")]
+        public Doctor Doctor { get; set; }
+        [ForeignKey("LabTesttId")]
+        public LabTest LabTest { get; set; }
 
     }
 }

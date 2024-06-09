@@ -1,19 +1,26 @@
 ﻿
+using AutoMapper;
 using thirdAssignment.Aplication.Core;
+using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Utils.ResultMessages;
 using thirdAssignment.Domain.Entities;
 
 namespace thirdAssignment.Aplication.Services
 {
-    public class UserService : IUserService
+    public class UserService : BaseService<SaveUserDto, UpdateUserDto, UserModel, User>, IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        private readonly ResultMessages _messages;
+        public UserService(IUserRepository userRepository, IMapper mapper) : base(userRepository, mapper, new ResultMessages("User"))
         {
             _userRepository = userRepository;
+            _mapper = mapper;
+            _messages = new("User");
         }
 
         public async Task<Result<List<UserModel>>> GetAll(Guid id)
@@ -21,83 +28,18 @@ namespace thirdAssignment.Aplication.Services
             Result<List<UserModel>> result = new();
             try
             {
-                List<User> usersGeted = await _userRepository.GetAll(id);
-                result.Data = usersGeted.Select(u => new UserModel
-                {
-                    Name = u.Name,
-                    LastName = u.LastName,
-                    Id = u.Id,
-                    Password = u.Password,
-                    UserName = u.UserName,
-                    EMailAddress = u.UserName,
-                    RolId = u.RolId,
-                    UserRol = new UserRolModel
-                    {
-                        Id = u.UserRol.Id,
-                        Name = u.UserRol.Name,
-                    },
-                    ConsultingRoom = new ConsultingRoomModel
-                    {
-                        Id = u.ConsultingRoom.Id,
-                        Name = u.ConsultingRoom.Name,
-                    }
+                List<User> usersGetted = await _userRepository.GetAll(id);
 
-                }).ToList();
-                result.Message = "Geting the user was a success";
+                result.Data = _mapper.Map<List<UserModel>>(usersGetted);
+
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Success];
 
                 return result;
             }
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = "Error geting the users";
-                return result;
-                throw;
-            }
-        }
-
-        public async Task<Result<UserModel>> GetById(Guid id)
-        {
-            Result<UserModel> result = new();
-            try
-            {
-                User UserGeted =  await _userRepository.GetById(id);
-
-                if (UserGeted is null)
-                {
-                    result.IsSuccess = false;
-                    result.Message = "Error geting the user";
-                    return result;  
-                }
-
-                result.Data = new UserModel
-                {
-                    Name = UserGeted.Name,
-                    LastName = UserGeted.LastName,
-                    Id = UserGeted.Id,
-                    Password = UserGeted.Password,
-                    UserName = UserGeted.UserName,
-                    EMailAddress = UserGeted.UserName,
-                    RolId = UserGeted.RolId,
-                    UserRol = new UserRolModel
-                    {
-                        Id = UserGeted.UserRol.Id,
-                        Name = UserGeted.UserRol.Name,
-                    },
-                    ConsultingRoom = new ConsultingRoomModel
-                    {
-                        Id = UserGeted.ConsultingRoom.Id,
-                        Name = UserGeted.ConsultingRoom.Name,
-                    }
-                };
-
-                result.Message = "Geting the user was a success";
-                return result;
-            }
-            catch (Exception ex) {
-
-                result.IsSuccess = false;
-                result.Message = "Error geting the user";
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Error];
                 return result;
                 throw;
             }
@@ -108,49 +50,24 @@ namespace thirdAssignment.Aplication.Services
             Result<UserModel> result = new();
             try
             {
-                User UserGeted = await _userRepository.Login(username, password);
+                User userGetted = await _userRepository.Login(username, password);
 
-                if (UserGeted is null)
-                {
-                    result.IsSuccess = false;
-                    result.Message = "Error loging the user";
-                    return result;
-                }
+                result.Data = _mapper.Map<UserModel>(userGetted);
 
-                result.Data = new UserModel
-                {
-                    Name = UserGeted.Name,
-                    LastName = UserGeted.LastName,
-                    Id = UserGeted.Id,
-                    Password = UserGeted.Password,
-                    UserName = UserGeted.UserName,
-                    EMailAddress = UserGeted.UserName,
-                    RolId = UserGeted.RolId,
-                    UserRol = new UserRolModel
-                    {
-                        Id = UserGeted.UserRol.Id,
-                        Name = UserGeted.UserRol.Name,
-                    },
-                    ConsultingRoom = new ConsultingRoomModel
-                    {
-                        Id = UserGeted.ConsultingRoom.Id,
-                        Name = UserGeted.ConsultingRoom.Name,
-                    }
-                };
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetById][State.Success];
 
-                result.Message = "Loging the user was a success";
                 return result;
             }
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = "Error loging the user";
+                result.Message = _messages.ResultMessage[TypeOfOperation.GetById][State.Error];
                 return result;
                 throw;
             }
         }
 
-        public async Task<Result<UserModel>> Save(UserModel entity)
+        public async Task<Result<UserModel>> Register(SaveUserDto entity)
         {
             Result<UserModel> result = new();
             try
@@ -158,97 +75,25 @@ namespace thirdAssignment.Aplication.Services
                 if (entity is null)
                 {
                     result.IsSuccess = false;
-                    result.Message = "Error saving the user";
+                    result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
                     return result;
                 }
 
-               await _userRepository.Save(new User
-                {
-                    Name = entity.Name,
-                    LastName = entity.LastName,
-                    Id = entity.Id,
-                    Password = entity.Password,
-                    RolId = entity.RolId,
-                    UserName = entity.UserName,
-                    EMailAddress = entity.UserName,
-                    ConsultingRoomId = entity.RolId,
-                });
+                User SavedUser = _mapper.Map<User>(entity);
+
+                await _userRepository.Save(SavedUser);
 
 
-                result.Message = "Saving the user was a success";
+                result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Success];
                 return result;
             }
             catch (Exception ex)
             {
                 result.IsSuccess = false;
-                result.Message = "Error saving the user";
+                result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
                 return result;
                 throw;
             }
         }
-
-        public async Task<Result<UserModel>> Update(UserModel entity)
-        {
-            Result<UserModel> result = new();
-            try
-            {
-                if (entity is null)
-                {
-                    result.IsSuccess = false;
-                    result.Message = "Error updating the user";
-                    return result;
-                }
-
-               await _userRepository.Update(new User
-                {
-                    Name = entity.Name,
-                    LastName = entity.LastName,
-                    Id = entity.Id,
-                    Password = entity.Password,
-                    UserName = entity.UserName,
-                    EMailAddress = entity.UserName,
-
-                });
-
-                result.Message = "Updating the user was a success";
-                return result;
-            }
-            catch (Exception ex)
-            {
-                result.IsSuccess = false;
-                result.Message = "Error updating the user";
-                return result;
-                throw;
-            }
-        }
-        public async Task<Result<UserModel>> Delete(Guid id)
-        {
-            Result<UserModel> result = new();
-            try
-            {
-                User UserDeleted = await _userRepository.GetById(id);
-
-                if (UserDeleted is null)
-                {
-                    result.IsSuccess = false;
-                    result.Message = "Error deleting the user";
-                    return result;
-                }
-
-                await _userRepository.Delete(UserDeleted);
-
-
-                result.Message = "Deleting the user was a success";
-                return result;
-            }
-            catch (Exception ex)
-            {
-                result.IsSuccess = false;
-                result.Message = "Error deleting the user";
-                return result;
-                throw;
-            }
-        }
-
     }
 }

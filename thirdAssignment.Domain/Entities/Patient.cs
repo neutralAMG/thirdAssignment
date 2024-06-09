@@ -15,7 +15,6 @@ namespace thirdAssignment.Domain.Entities
         public bool IsSmoker { get; set; }
         public bool HasAllergies { get; set; }
         public DateOnly BirthDate { get; set; }
-        public Guid ConsultingRoomId { get; set; }
         public IList<Appointment> appointments { get; set; }
     }
 }
