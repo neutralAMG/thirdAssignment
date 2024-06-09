@@ -1,7 +1,19 @@
+using thirdAssignment.Aplication;
+using thirdAssignment.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddInfraestructuraPersistenceLayer(builder.Configuration);
+
+builder.Services.AddAplicationLayer();
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSession(options => {
+    options.IOTimeout = TimeSpan.FromSeconds(5);
+    options.IdleTimeout = TimeSpan.FromSeconds(5);
+});
 
 var app = builder.Build();
 

@@ -37,7 +37,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 return await base.GetById(id);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -51,7 +51,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 await base.Save(entity);
 
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -82,7 +82,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Update(DoctorToBeUpdated);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -99,7 +99,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Delete(DoctorToBeDeleted);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }

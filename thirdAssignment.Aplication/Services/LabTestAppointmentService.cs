@@ -38,7 +38,7 @@ namespace thirdAssignment.Aplication.Services
 
                 return result;
             }
-            catch (Exception ex)
+            catch 
             {
                 result.IsSuccess = false;
                 result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Error];
@@ -61,7 +61,7 @@ namespace thirdAssignment.Aplication.Services
 
                 return result;
             }
-            catch (Exception ex)
+            catch 
             {
                 result.IsSuccess = false;
                 result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Error];
@@ -85,7 +85,7 @@ namespace thirdAssignment.Aplication.Services
 
                 return result;
             }
-            catch (Exception ex)
+            catch 
             {
                 result.IsSuccess = false;
                 result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Error];

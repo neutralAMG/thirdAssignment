@@ -57,7 +57,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 //_appContext.LabtestAppointments.FirstOrDefaultAsync(u => u.Id == id);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -71,7 +71,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 await base.Save(entity);
 
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -93,7 +93,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Update(LabTestAppointmentToBeUpdated);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -110,7 +110,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Delete(LabTestAppointmentToBeDeleted);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }

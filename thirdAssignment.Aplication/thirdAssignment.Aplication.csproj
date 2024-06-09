@@ -20,8 +20,4 @@
     <ProjectReference Include="..\thirdAssignment.Domain\thirdAssignment.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Utils\PasswordHasher\" />
-  </ItemGroup>
-
 </Project>

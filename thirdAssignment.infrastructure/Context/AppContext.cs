@@ -21,9 +21,10 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
 
         }
 
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("ConectionString");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-LL4GL68; Database=thirdAssignment; Integrated Security=true; TrustServerCertificate=true;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

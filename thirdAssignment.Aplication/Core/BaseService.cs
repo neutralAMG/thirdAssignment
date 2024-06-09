@@ -69,7 +69,7 @@ namespace thirdAssignment.Aplication.Core
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.GetById][State.Success];
                 return result;
             }
-            catch (Exception ex)
+            catch 
             {
 
                 result.IsSuccess = false;
@@ -79,7 +79,7 @@ namespace thirdAssignment.Aplication.Core
             }
         }
 
-        public async Task<Result<TViewModel>> Save(TSaveDto saveDto)
+        public virtual async Task<Result<TViewModel>> Save(TSaveDto saveDto)
         {
             Result<TViewModel> result = new();
             try
@@ -99,7 +99,7 @@ namespace thirdAssignment.Aplication.Core
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.Save][State.Success];
                 return result;
             }
-            catch (Exception ex)
+            catch 
             {
                 result.IsSuccess = false;
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.Save][State.Error];
@@ -108,7 +108,7 @@ namespace thirdAssignment.Aplication.Core
             }
         }
 
-        public async Task<Result<TViewModel>> Update(TUpdateDto UpdateDto)
+        public virtual async Task<Result<TViewModel>> Update(TUpdateDto UpdateDto)
         {
             Result<TViewModel> result = new();
             try
@@ -125,7 +125,7 @@ namespace thirdAssignment.Aplication.Core
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.Update][State.Success];
                 return result;
             }
-            catch (Exception ex)
+            catch 
             {
                 result.IsSuccess = false;
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.Update][State.Error];
@@ -133,7 +133,7 @@ namespace thirdAssignment.Aplication.Core
                 throw;
             }
         }
-        public async Task<Result<TViewModel>> Delete(Guid id)
+        public virtual async Task<Result<TViewModel>> Delete(Guid id)
         {
             Result<TViewModel> result = new();
             try
@@ -153,7 +153,7 @@ namespace thirdAssignment.Aplication.Core
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.Delete][State.Success];
                 return result;
             }
-            catch (Exception ex)
+            catch 
             {
                 result.IsSuccess = false;
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.Delete][State.Error];

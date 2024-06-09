@@ -15,7 +15,6 @@ namespace thirdAssignment.Aplication.Utils.ResultMessages
                         { State.Error, $"Error geting the {name}s" }
                     } },
 
-
                 {TypeOfOperation.GetById,
                     new(){
                         {State.Success, $" Geting the {name} was a success" },
@@ -23,14 +22,12 @@ namespace thirdAssignment.Aplication.Utils.ResultMessages
                         {State.Error, $"Error geting the {name}" }
                     } },
 
-
                 {TypeOfOperation.Save,
 
                     new(){
                         {State.Success, $" Saving the {name} was a success " },
                         {State.Error, $"Error saving the {name}" }
                    } },
-
 
                 {TypeOfOperation.Update,
                     new(){

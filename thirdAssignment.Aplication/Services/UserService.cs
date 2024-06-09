@@ -5,6 +5,7 @@ using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Utils.PasswordHasher;
 using thirdAssignment.Aplication.Utils.ResultMessages;
 using thirdAssignment.Domain.Entities;
 
@@ -14,12 +15,13 @@ namespace thirdAssignment.Aplication.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-
+        private readonly IPasswordHasher _passwordHasher;
         private readonly ResultMessages _messages;
-        public UserService(IUserRepository userRepository, IMapper mapper) : base(userRepository, mapper, new ResultMessages("User"))
+        public UserService(IUserRepository userRepository, IMapper mapper, IPasswordHasher passwordHasher) : base(userRepository, mapper, new ResultMessages("User"))
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _passwordHasher = passwordHasher;
             _messages = new("User");
         }
 
@@ -36,7 +38,7 @@ namespace thirdAssignment.Aplication.Services
 
                 return result;
             }
-            catch (Exception ex)
+            catch 
             {
                 result.IsSuccess = false;
                 result.Message = _messages.ResultMessage[TypeOfOperation.GetAll][State.Error];
@@ -50,7 +52,9 @@ namespace thirdAssignment.Aplication.Services
             Result<UserModel> result = new();
             try
             {
-                User userGetted = await _userRepository.Login(username, password);
+                string passwordHashed = _passwordHasher.hashPasword(password);
+
+                User userGetted = await _userRepository.Login(username, passwordHashed);
 
                 result.Data = _mapper.Map<UserModel>(userGetted);
 
@@ -58,7 +62,7 @@ namespace thirdAssignment.Aplication.Services
 
                 return result;
             }
-            catch (Exception ex)
+            catch
             {
                 result.IsSuccess = false;
                 result.Message = _messages.ResultMessage[TypeOfOperation.GetById][State.Error];
@@ -67,19 +71,21 @@ namespace thirdAssignment.Aplication.Services
             }
         }
 
-        public async Task<Result<UserModel>> Register(SaveUserDto entity)
+        public async Task<Result<UserModel>> Register(SaveUserDto saveDto)
         {
             Result<UserModel> result = new();
             try
             {
-                if (entity is null)
+                if (saveDto is null)
                 {
                     result.IsSuccess = false;
                     result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
                     return result;
                 }
 
-                User SavedUser = _mapper.Map<User>(entity);
+                saveDto.Password = _passwordHasher.hashPasword(saveDto.Password);
+
+                User SavedUser = _mapper.Map<User>(saveDto);
 
                 await _userRepository.Save(SavedUser);
 
@@ -87,13 +93,19 @@ namespace thirdAssignment.Aplication.Services
                 result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Success];
                 return result;
             }
-            catch (Exception ex)
+            catch
             {
                 result.IsSuccess = false;
                 result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
                 return result;
                 throw;
             }
+        }
+
+        public override async Task<Result<UserModel>> Save(SaveUserDto saveDto)
+        {
+           saveDto.Password = _passwordHasher.hashPasword(saveDto.Password);
+           return await base.Save(saveDto);
         }
     }
 }

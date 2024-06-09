@@ -35,7 +35,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 return await base.GetById(id);
                     //_appContext.Patients.FirstOrDefaultAsync(u => u.Id == id);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -55,7 +55,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 await base.Save(entity);
 
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -93,7 +93,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Update(PatientToBeUpdated);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -110,7 +110,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Delete(PatientToBeDeleted);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }

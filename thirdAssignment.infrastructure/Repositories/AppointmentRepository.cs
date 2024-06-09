@@ -33,7 +33,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                .Include(a => a.Patient)
                .Include(a => a.labTestAppointments).FirstOrDefaultAsync( a => a.Id == id);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -58,7 +58,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 await base.Save(entity);
 
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -68,7 +68,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         public override async Task Update(Appointment entity)
         {
-
             await base.Update(entity);
         }
 
@@ -82,7 +81,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Delete(AppointmentToBeDeleted);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }

@@ -31,7 +31,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 return await _appContext.Users.Include(u => u.ConsultingRoom)
                     .Include(u => u.UserRol).FirstOrDefaultAsync(u => u.Id == id);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -53,7 +53,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 await base.Save(entity);
                  await _appContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -83,7 +83,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await _appContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -112,7 +112,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Update(UserToBeUpdated);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -129,7 +129,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 await base.Delete(UserToBeDeleted);
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -147,7 +147,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                     .FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
 
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
