@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "thirdAssignment.Presentation", "thirdAssignment\thirdAssignment.Presentation.csproj", "{D84B2A1A-F952-4599-A84B-BF6C1F9D055E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "thirdAssignment.Presentation", "thirdAssignment\thirdAssignment.Presentation.csproj", "{D84B2A1A-F952-4599-A84B-BF6C1F9D055E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "thirdAssignment.Domain", "thirdAssignment.Domain\thirdAssignment.Domain.csproj", "{D59CBC7E-DA9A-42CB-AD12-1C9A1F8EFAA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "thirdAssignment.Domain", "thirdAssignment.Domain\thirdAssignment.Domain.csproj", "{D59CBC7E-DA9A-42CB-AD12-1C9A1F8EFAA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "thirdAssignment.Prresistence", "thirdAssignment.Prresistence\thirdAssignment.Prresistence.csproj", "{8B27CEB8-7650-4D6E-981D-E2D6877B3B55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "thirdAssignment.Aplication", "thirdAssignment.Aplication\thirdAssignment.Aplication.csproj", "{12CC0D6A-491F-45C0-8D17-0EC71B5BC6A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "thirdAssignment.Aplication", "thirdAssignment.Aplication\thirdAssignment.Aplication.csproj", "{12CC0D6A-491F-45C0-8D17-0EC71B5BC6A0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "thirdAssignment.Infrastructure.Persistence", "thirdAssignment.infrastructure\thirdAssignment.Infrastructure.Persistence.csproj", "{EB0E5B55-C136-46FE-B313-9775B2617869}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "thirdAssignment.Infrastructure.Persistence", "thirdAssignment.infrastructure\thirdAssignment.Infrastructure.Persistence.csproj", "{EB0E5B55-C136-46FE-B313-9775B2617869}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +25,6 @@ Global
 		{D59CBC7E-DA9A-42CB-AD12-1C9A1F8EFAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D59CBC7E-DA9A-42CB-AD12-1C9A1F8EFAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D59CBC7E-DA9A-42CB-AD12-1C9A1F8EFAA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B27CEB8-7650-4D6E-981D-E2D6877B3B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B27CEB8-7650-4D6E-981D-E2D6877B3B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B27CEB8-7650-4D6E-981D-E2D6877B3B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B27CEB8-7650-4D6E-981D-E2D6877B3B55}.Release|Any CPU.Build.0 = Release|Any CPU
 		{12CC0D6A-491F-45C0-8D17-0EC71B5BC6A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{12CC0D6A-491F-45C0-8D17-0EC71B5BC6A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12CC0D6A-491F-45C0-8D17-0EC71B5BC6A0}.Release|Any CPU.ActiveCfg = Release|Any CPU

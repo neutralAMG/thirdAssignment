@@ -12,7 +12,6 @@ namespace thirdAssignment.Aplication.Dtos
 
     public record SaveLabTestAppointmentDto : BaseLabTestAppointmentDto
     {
-        public Guid LabTestAppointmentId { get; set; }
         public Guid AppointmetId { get; set; }
         public Guid labTesttId { get; set; }
         public Guid ConsultingRoomId { get; set; }

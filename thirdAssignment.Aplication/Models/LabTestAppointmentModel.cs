@@ -14,9 +14,9 @@ namespace thirdAssignment.Aplication.Models
         public bool IsNotPending { get; set; }
         public string TestResult { get; set; }
       //  public Guid ConsultingRoomId { get; set; }
-        public AppointmentModel appointment { get; set; }
-        public DoctorModel doctor { get; set; }
-        public PatientModel patient { get; set; }
-        public LabTestModel labTest { get; set; }
+        public AppointmentModel Appointment { get; set; }
+        public DoctorModel Doctor { get; set; }
+        public PatientModel Patient { get; set; }
+        public LabTestModel LabTest { get; set; }
     }
 }

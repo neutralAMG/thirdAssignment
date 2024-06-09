@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using thirdAssignment.Aplication.Interfaces.Repository;
+using thirdAssignment.Infrastructure.Persistence.Context;
 using thirdAssignment.Infrastructure.Persistence.Repositories;
 
 namespace thirdAssignment.Infrastructure
@@ -12,8 +13,8 @@ namespace thirdAssignment.Infrastructure
         {
             string ConectionString = config.GetConnectionString("Default");
 
-            services.AddDbContext<Infrastructure.Persistence.Context.AppContext>(options => 
-            options.UseSqlServer(ConectionString));
+            services.AddDbContext<thirdAssignmentAppContext>(options => 
+            options.UseSqlServer(ConectionString, b => b.MigrationsAssembly("thirdAssignment.Infrastructure.Persistence")));
 
 
             services.AddTransient<IUserRepository, UserRepository>();

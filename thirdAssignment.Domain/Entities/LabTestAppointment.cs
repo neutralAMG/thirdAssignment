@@ -8,10 +8,9 @@ namespace thirdAssignment.Domain.Entities
     {
         public LabTestAppointment()
         {
-            Name = $" test's for the appointment {appointment.Name}";
+            Name = $" test's for the appointment {AppointmetId}";
             IsNotPending = false;
         }
-        public Guid LabTestAppointmentId { get; set; }
         public Guid AppointmetId { get; set; }
         public Guid LabTesttId { get; set; }
         public Guid DoctorsId { get; set; }
@@ -20,7 +19,7 @@ namespace thirdAssignment.Domain.Entities
         public string TestResult { get; set; }
 
         [ForeignKey("AppointmetId")]
-        public Appointment appointment { get; set; }
+        public Appointment Appointment { get; set; }
         [ForeignKey("PatientId")]
         public Patient Patient { get; set; }
         [ForeignKey("DoctorsId")]

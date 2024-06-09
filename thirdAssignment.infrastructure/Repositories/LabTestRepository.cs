@@ -2,15 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Domain.Entities;
+using thirdAssignment.Infrastructure.Persistence.Context;
 using thirdAssignment.Infrastructure.Persistence.Core;
 
 namespace thirdAssignment.Infrastructure.Persistence.Repositories
 {
     public class LabTestRepository : BaseRepository<LabTest>, ILabTestRepository
     {
-        private readonly Context.AppContext _appContext;
+        private readonly thirdAssignmentAppContext _appContext;
 
-        public LabTestRepository(Context.AppContext appContext) : base(appContext)
+        public LabTestRepository(thirdAssignmentAppContext appContext) : base(appContext)
         {
             _appContext = appContext;
         }

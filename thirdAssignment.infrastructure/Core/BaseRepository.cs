@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using thirdAssignment.Aplication.Core;
+using thirdAssignment.Infrastructure.Persistence.Context;
 
 namespace thirdAssignment.Infrastructure.Persistence.Core
 {
     public class BaseRepository<Tentity> : IBaseRepository<Tentity> where Tentity : class
     {
      
-        private readonly Context.AppContext _AppContext;
+        private readonly thirdAssignmentAppContext _AppContext;
 
         private DbSet<Tentity> _Entities;
-        public BaseRepository(Context.AppContext AppContext)
+        public BaseRepository(thirdAssignmentAppContext AppContext)
         {
             _AppContext = AppContext;
             _Entities = _AppContext.Set<Tentity>();

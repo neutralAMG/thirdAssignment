@@ -18,6 +18,7 @@ namespace thirdAssignment.Aplication
             services.AddTransient<IDoctorService, DoctorService>();
             services.AddTransient<ILabTestAppointmentService, LabTestAppointmentService>();
             services.AddTransient<IPasswordHasher, PasswordHasher>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         }
     }

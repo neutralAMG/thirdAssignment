@@ -2,15 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Domain.Entities;
+using thirdAssignment.Infrastructure.Persistence.Context;
 using thirdAssignment.Infrastructure.Persistence.Core;
 
 namespace thirdAssignment.Infrastructure.Persistence.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        private readonly Context.AppContext _appContext;
+        private readonly thirdAssignmentAppContext _appContext;
 
-        public UserRepository(Context.AppContext appContext) : base(appContext)
+        public UserRepository(thirdAssignmentAppContext appContext) : base(appContext)
         {
             _appContext = appContext;
         }

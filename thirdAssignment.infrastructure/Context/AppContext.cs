@@ -5,7 +5,7 @@ using thirdAssignment.Domain.Entities;
 
 namespace thirdAssignment.Infrastructure.Persistence.Context
 {
-    public class AppContext : DbContext
+    public class thirdAssignmentAppContext : DbContext
     {
         public DbSet<User> Users { get; set; }
         public DbSet<UserRol> UserRols { get; set; }
@@ -16,7 +16,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
         public DbSet<ConsultingRoom> ConsultingRooms { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentState> AppointmentStates { get; set; }
-        public AppContext(DbContextOptions<AppContext> options) : base(options)
+
+        public thirdAssignmentAppContext(DbContextOptions<thirdAssignmentAppContext> options) : base(options)
         {
 
         }
@@ -24,7 +25,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-LL4GL68; Database=thirdAssignment; Integrated Security=true; TrustServerCertificate=true;");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-LL4GL68; Database=thirdAssignment; Integrated Security=true; TrustServerCertificate=true;", b => b.MigrationsAssembly("thirdAssignment.Infrastructure.Persistence"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -64,21 +65,24 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 p.Property(p => p.LastName).IsRequired();
                 p.Property(p => p.EMailAddress).IsRequired();
                 p.Property(p => p.Cedula).IsRequired();
-                p.Property(p => p.BirthDate).IsRequired();
+                p.Property(p => p.BirthDate).IsRequired().HasConversion(v => v.ToDateTime(TimeOnly.MinValue), v => DateOnly.FromDateTime(v));
                 p.Property(p => p.IsSmoker).IsRequired();
                 p.Property(p => p.HasAllergies).IsRequired();
                 p.Property(p => p.Address).IsRequired();
-                p.Property(p => p.ImgPath).IsRequired();
-                
+                p.Property(p => p.ImgPath);
+
 
 
             });
+
             modelBuilder.Entity<Doctor>(d =>
             {
 
                 d.HasKey(d => d.Id);
-                d.HasOne(d => d.ConsultingRoom);
-                d.HasMany(d => d.appointments);
+                d.HasOne(d => d.ConsultingRoom).WithMany(cr => cr.doctors)
+                .HasForeignKey(a => a.Id).OnDelete(DeleteBehavior.Cascade);
+                d.HasMany(d => d.appointments).WithOne(cr => cr.Doctor)
+                .HasForeignKey(a => a.Id).OnDelete(DeleteBehavior.Restrict); ;
                 d.Property(d => d.Name).IsRequired();
                 d.Property(d => d.Id).IsRequired();
                 d.Property(d => d.ConsultingRoomId).IsRequired();
@@ -86,7 +90,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 d.Property(d => d.LastName).IsRequired();
                 d.Property(d => d.EMailAddress).IsRequired();
                 d.Property(d => d.Cedula).IsRequired();
-                d.Property(d => d.ImgPath).IsRequired();
+                d.Property(d => d.ImgPath);
             });
 
             modelBuilder.Entity<LabTest>(l =>
@@ -97,20 +101,35 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 l.HasMany(l => l.labTestAppointments);
                 l.Property(l => l.Name).IsRequired();
                 l.Property(l => l.Id).IsRequired();
+                l.Property(l => l.Description);
                 l.Property(l => l.ConsultingRoomId).IsRequired();
-                l.Property(l => l.ConsultingRoomId).IsRequired();
-             
+
             });
 
             modelBuilder.Entity<LabTestAppointment>(l =>
             {
 
                 l.HasKey(l => l.Id);
-                l.HasOne(l => l.ConsultingRoom);
-                l.HasOne(l => l.appointment);
-                l.HasOne(l => l.Patient);
-                l.HasOne(l => l.Doctor);
-                l.HasOne(l => l.LabTest);
+                l.HasOne(l => l.ConsultingRoom).WithMany()
+                .HasForeignKey(l => l.ConsultingRoomId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+                l.HasOne(l => l.Appointment).WithMany()
+                .HasForeignKey(l => l.AppointmetId)
+                .OnDelete(DeleteBehavior.NoAction); 
+
+                l.HasOne(l => l.Patient).WithMany()
+                .HasForeignKey(l => l.PatientId)
+                .OnDelete(DeleteBehavior.NoAction); 
+
+                l.HasOne(l => l.Doctor).WithMany()
+                .HasForeignKey(l => l.DoctorsId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+                l.HasOne(l => l.LabTest).WithMany()
+                .HasForeignKey(l => l.LabTesttId)
+                .OnDelete(DeleteBehavior.NoAction); 
+
                 l.Property(l => l.AppointmetId).IsRequired();
                 l.Property(l => l.LabTesttId).IsRequired();
                 l.Property(l => l.DoctorsId).IsRequired();
@@ -126,17 +145,19 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 a.HasKey(l => l.Id);
                 a.HasOne(l => l.ConsultingRoom);
                 a.HasOne(l => l.Doctor);
-                a.HasOne(l => l.Patient);
+                a.HasOne(l => l.Patient).WithMany(p => p.appointments)
+        .HasForeignKey(a => a.PatientId)
+        .OnDelete(DeleteBehavior.Restrict);
                 a.HasMany(l => l.labTestAppointments);
                 a.HasOne(l => l.AppointmentState);
-                a.Property(l => l.AppointmentDate).IsRequired();
+                a.Property(l => l.AppointmentDate).IsRequired().HasConversion(v => v.ToDateTime(TimeOnly.MinValue), v => DateOnly.FromDateTime(v));
                 a.Property(l => l.AppointmentCause).IsRequired();
-                a.Property(l => l.AppointmentTime).IsRequired();
+                a.Property(l => l.AppointmentTime).IsRequired().HasConversion(v => v.ToTimeSpan(), v => new TimeOnly(v.Ticks));
                 a.Property(l => l.Id).IsRequired();
                 a.Property(l => l.ConsultingRoomId).IsRequired();
                 a.Property(l => l.DoctorId).IsRequired();
                 a.Property(l => l.AppointmentStateId).IsRequired();
-                a.Property(l => l.PatientId).IsRequired(); 
+                a.Property(l => l.PatientId).IsRequired();
             });
 
 
