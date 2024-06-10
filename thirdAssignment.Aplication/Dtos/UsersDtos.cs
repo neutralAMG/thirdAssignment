@@ -17,7 +17,7 @@ namespace thirdAssignment.Aplication.Dtos
     {       
         public Guid ConsultingRoomId { get; set; }
         public string ConsultingRoomName { get; set; }
-        public Guid RolId { get; set; }
+        public int RolId { get; set; }
     }
     public record UpdateUserDto : BaseUserDto
     {

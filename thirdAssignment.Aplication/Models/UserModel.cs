@@ -11,11 +11,12 @@ namespace thirdAssignment.Aplication.Models
         public string LastName { get; set; }
         public string EMailAddress { get; set; }
 
-     //   public Guid ConsultingRoomId { get; set; }
+
+        //   public Guid ConsultingRoomId { get; set; }
 
         public string UserName { get; set; }
         public string ConsultingRoomName { get; set; }
-        //    public string Password { get; set; }
+         public string Password { get; set; }
 
         //     public Guid RolId { get; set; }
 

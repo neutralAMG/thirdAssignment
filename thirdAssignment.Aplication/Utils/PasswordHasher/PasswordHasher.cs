@@ -18,5 +18,15 @@ namespace thirdAssignment.Aplication.Utils.PasswordHasher
             return string.Join(Delimiter, Convert.ToBase64String(salt), Convert.ToBase64String(hash));        
                 
          }
+
+        public bool Verification(string passwordHash, string inputPassword)
+        {
+            var elements = passwordHash.Split(Delimiter);
+            var salt = Convert.FromBase64String(elements[0]);
+            var hash = Convert.FromBase64String(elements[1]);
+            var hashInput = Rfc2898DeriveBytes.Pbkdf2(inputPassword, salt, Iterations, _hashAlgorithmName, KeySize);
+
+            return CryptographicOperations.FixedTimeEquals(hash, hashInput);
+        }
     }
 }

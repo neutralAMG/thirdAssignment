@@ -10,6 +10,25 @@ namespace thirdAssignment.Aplication.Utils.Mapper
     {
         public GeneralProfile()
         {
+           #region User rol mappings
+
+            CreateMap<UserRol, UserRolModel>()
+                 .ReverseMap()
+                .ForMember(dest => dest.users, opt => opt.Ignore());
+
+            #endregion
+
+            #region consultingRoom mappings
+
+            CreateMap<ConsultingRoom, ConsultingRoomModel>()
+                 .ReverseMap()
+                .ForMember(dest => dest.users, opt => opt.Ignore())
+                .ForMember(dest => dest.patients, opt => opt.Ignore())
+                .ForMember(dest => dest.labTests, opt => opt.Ignore())
+                .ForMember(dest => dest.appointments, opt => opt.Ignore())
+                .ForMember(dest => dest.doctors, opt => opt.Ignore());
+
+            #endregion
 
             #region User Mappings
 
@@ -34,13 +53,7 @@ namespace thirdAssignment.Aplication.Utils.Mapper
 
             #endregion
 
-            #region User rol mappings
-
-            CreateMap<UserRol, UserRolModel>()
-                 .ReverseMap()
-                .ForMember(dest => dest.users, opt => opt.Ignore());
-
-            #endregion
+ 
 
             #region Doctor mappings
 

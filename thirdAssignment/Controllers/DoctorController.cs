@@ -1,35 +1,108 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using thirdAssignment.Aplication.Core;
+using thirdAssignment.Aplication.Dtos;
+using thirdAssignment.Aplication.Interfaces.Contracts;
+using thirdAssignment.Aplication.Models;
+using thirdAssignment.Presentation.Utils.SessionHandler;
+using thirdAssignment.Presentation.Utils.UserValidations;
 
 namespace thirdAssignment.Presentation.Controllers
 {
     public class DoctorController : Controller
     {
-        // GET: DoctorController
-        public ActionResult Index()
+        private readonly IDoctorService _doctorService;
+        private readonly UserValidations _userValidations;
+
+        public DoctorController(IDoctorService doctorService, UserValidations userValidations)
         {
-            return View();
+            _doctorService = doctorService;
+            _userValidations = userValidations;
+        }
+        // GET: DoctorController
+        public async Task<IActionResult> Index()
+        {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+            Result<List<DoctorModel>> result = new();
+            try
+            {
+                var currentUser = HttpContext.Session.Get<UserModel>("user");
+
+                result = await _doctorService.GetAll(currentUser.ConsultingRoom.Id);
+
+                if (!result.IsSuccess)
+                {
+
+                }
+                return View(result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+
+
         }
 
         // GET: DoctorController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> DoctorDetails(Guid id)
         {
-            return View();
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+
+            Result<DoctorModel> result = new();
+            try
+            {
+                result = await _doctorService.GetById(id);
+
+                if (!result.IsSuccess)
+                {
+
+                }
+
+                return View(result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+
         }
 
         // GET: DoctorController/Create
-        public ActionResult Create()
+        public async Task<IActionResult> SaveDoctor()
         {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
             return View();
         }
 
         // POST: DoctorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> SaveDoctor(SaveDoctorDto saveDto)
         {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+            Result<DoctorModel> result = new();
             try
             {
+
+                saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
+
+                result = await _doctorService.Save(saveDto);
+
+                if (!result.IsSuccess)
+                {
+                    ViewBag.Message = result.Message;
+                    return View();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -39,18 +112,56 @@ namespace thirdAssignment.Presentation.Controllers
         }
 
         // GET: DoctorController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> EditDoctor(Guid id)
         {
-            return View();
+
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+            Result<DoctorModel> result = new();
+            try
+            {
+                result = await _doctorService.GetById(id);
+
+                if (!result.IsSuccess)
+                {
+                    ViewBag.Message = result.Message;
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+
+
         }
 
         // POST: DoctorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> EditDoctor(Guid id, UpdateDoctorDto updateDto)
         {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+            Result<DoctorModel> result = new();
             try
             {
+
+
+                result = await _doctorService.Update(updateDto);
+
+                if (!result.IsSuccess)
+                {
+                    Result<DoctorModel> resultIner = new();
+
+                    resultIner = await _doctorService.GetById(id);
+                    ViewBag.Message = result.Message;
+                    return View(resultIner.Data);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -60,19 +171,54 @@ namespace thirdAssignment.Presentation.Controllers
         }
 
         // GET: DoctorController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> DeleteDoctor(Guid id)
         {
-            return View();
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+            Result<DoctorModel> result = new();
+            try
+            {
+                result = await _doctorService.GetById(id);
+
+                if (!result.IsSuccess)
+                {
+                    ViewBag.Message = result.Message;
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+
         }
 
         // POST: DoctorController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteDoctor(Guid id, IFormCollection collection)
         {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+            Result<DoctorModel> result = new();
             try
             {
+                result = await _doctorService.Delete(id);
+
+                if (!result.IsSuccess)
+                {
+                    Result<DoctorModel> resultIner = new();
+
+                    resultIner = await _doctorService.GetById(id);
+                    ViewBag.Message = result.Message;
+                    return View(resultIner.Data);
+                }
                 return RedirectToAction(nameof(Index));
+
             }
             catch
             {
@@ -80,4 +226,5 @@ namespace thirdAssignment.Presentation.Controllers
             }
         }
     }
+
 }

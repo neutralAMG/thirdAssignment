@@ -1,0 +1,59 @@
+﻿@model List<SelectListItem>  
+
+@if (ViewBag.Message is not null)
+{
+    <p class="alert-danger d-block text-center">@ViewBag.message</p>
+}
+<div class="row">
+    <div class="col-8 offset-2">
+        <div class=" bg-dark text-light">
+            <h1 class="text-center"> Register </h1>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <section>
+                    <form method="post" asp-controller="User" asp-action="SaveUser">
+
+                        <div class="mb-3">
+                            <label for="Name" class="form-label"> Name</label>
+                            <input type="text" name="Name" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="LastName" class="form-label"> Last Name</label>
+                            <input type="text" name="LastName" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="EMailAddress" class="form-label"> EMail Address</label>
+                            <input type="text" name="EMailAddress" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="UserName" class="form-label"> User Name</label>
+                            <input type="text" name="UserName" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Password" class="form-label"> Password </label>
+                            <input type="text" name="Password" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="PasswordConfirm" class="form-label"> Password Confirm </label>
+                            <input type="text" name="PasswordConfirm" class="form-control" />
+                        </div>
+                  
+                        <div class="mb-3">
+                            <label for="RolId" class="form-label"> Rol </label>
+                            <select name="RolId" id="RolId" class="form-select" asp-items="Model"> </select>
+                        </div>
+                        <div class="p-2">
+                            <button asp-controller="User" asp-action="SaveUser" class="btn btn-primary  float-end  p-2 "> Save </button>
+                            <a asp-controller="User" asp-action="Index" class="btn btn-outline-warning  float-end  p-2  mx-2"> Go Back </a>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

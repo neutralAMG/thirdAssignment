@@ -52,9 +52,26 @@ namespace thirdAssignment.Aplication.Services
             Result<UserModel> result = new();
             try
             {
-                string passwordHashed = _passwordHasher.hashPasword(password);
+               // string passwordHashed = _passwordHasher.hashPasword(password);
 
-                User userGetted = await _userRepository.Login(username, passwordHashed);
+                User userGetted = await _userRepository.Login(username);
+
+                if (userGetted is null)
+                {
+                    result.IsSuccess = false;
+                    result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
+                    return result;
+                }
+
+               bool verification = _passwordHasher.Verification(userGetted.Password,password);
+
+
+                if (!verification)
+                {
+                    result.IsSuccess = false;
+                    result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
+                    return result;
+                }
 
                 result.Data = _mapper.Map<UserModel>(userGetted);
 
@@ -87,7 +104,7 @@ namespace thirdAssignment.Aplication.Services
 
                 User SavedUser = _mapper.Map<User>(saveDto);
 
-                await _userRepository.Save(SavedUser);
+                await _userRepository.Register(SavedUser);
 
 
                 result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Success];
@@ -102,10 +119,37 @@ namespace thirdAssignment.Aplication.Services
             }
         }
 
+
         public override async Task<Result<UserModel>> Save(SaveUserDto saveDto)
         {
            saveDto.Password = _passwordHasher.hashPasword(saveDto.Password);
-           return await base.Save(saveDto);
+
+            Result<UserModel> result = new();
+            try
+            {
+                if (saveDto is null)
+                {
+                    result.IsSuccess = false;
+                    result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
+                    return result;
+                }
+
+                User SavedEntity = _mapper.Map<User>(saveDto);
+
+                await _userRepository.Save(SavedEntity);
+
+
+                result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Success];
+                return result;
+            }
+            catch
+            {
+                result.IsSuccess = false;
+                result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
+                return result;
+                throw;
+            }
+           // return await base.Save(saveDto);
         }
     }
 }

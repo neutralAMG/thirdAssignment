@@ -27,7 +27,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Id != id)) return null;
+
 
                 return await _appContext.Users.Include(u => u.ConsultingRoom)
                     .Include(u => u.UserRol).FirstOrDefaultAsync(u => u.Id == id);
@@ -43,14 +43,11 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Name == entity.Name)) return;
+                if (await Exits(u => u.UserName == entity.UserName)) return;
 
                 if (await Exits(u => u.LastName == entity.LastName)) return;
 
-                if (await Exits(u => u.UserName == entity.UserName)) return;
-
-                if (await Exits(u => u.EMailAddress == entity.EMailAddress)) return;
-
+                
                 await base.Save(entity);
                  await _appContext.SaveChangesAsync();
             }
@@ -66,17 +63,16 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Name == entity.Name)) return;
+                if (await Exits(u => u.UserName == entity.UserName)) return;
 
                 if (await Exits(u => u.LastName == entity.LastName)) return;
 
-                if (await Exits(u => u.UserName == entity.UserName)) return;
-
-                if (await Exits(u => u.EMailAddress == entity.EMailAddress)) return;
 
                 ConsultingRoom consultingRoom = new ConsultingRoom { Name = entity.ConsultingRoomName };
 
                 _appContext.ConsultingRooms.Add(consultingRoom);
+
+                await _appContext.SaveChangesAsync();
 
                 entity.ConsultingRoomId = consultingRoom.Id;
 
@@ -97,7 +93,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
             try
             {
-                if (await Exits(u => u.Id != entity.Id)) return;
+                if (await Exits(u => u.UserName == entity.UserName)) return;
 
                 User UserToBeUpdated = await GetById(entity.Id);
 
@@ -107,7 +103,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 UserToBeUpdated.LastName = entity.LastName;
 
-                UserToBeUpdated.Password = entity.Password;
+                UserToBeUpdated.Password = entity.Password is null ? UserToBeUpdated.Password : entity.Password;
 
                 UserToBeUpdated.UserName = entity.UserName;
 
@@ -124,7 +120,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Id != entity.Id)) return;
 
                 User UserToBeDeleted = await GetById(entity.Id);
 
@@ -137,15 +132,15 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public async Task<User> Login(string username, string password)
+        public async Task<User> Login(string username)
         {
             try
             {
-                if (await Exits(u => u.UserName != username || u.Password != password)) return null;
 
                 return await _appContext.Users.Include(u => u.ConsultingRoom)
                     .Include(u => u.UserRol)
-                    .FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
+                    .Where(u => u.UserName == username)
+                    .FirstOrDefaultAsync();
 
             }
             catch 
@@ -158,8 +153,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         public async Task<List<User>> GetAll(Guid id)
         {
-            return await _appContext.Users.Where(u => u.ConsultingRoomId == id).
-                 Include(u => u.ConsultingRoom).ToListAsync();
+            return await _appContext.Users.Where(u => u.ConsultingRoomId == id)
+                .Include(u => u.ConsultingRoom).Include(u => u.UserRol).ToListAsync();
         }
     }
 }

@@ -30,6 +30,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            #region user configuration
             modelBuilder.Entity<User>(u =>
             {
                 u.HasKey(u => u.Id);
@@ -44,15 +45,18 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 u.Property(u => u.Password).IsRequired();
                 u.Property(u => u.UserName).IsRequired();
             });
+            #endregion
 
+            #region ConsultingRoom configuration
             modelBuilder.Entity<ConsultingRoom>(c =>
             {
                 c.HasKey(c => c.Id);
                 c.Property(c => c.Name).IsRequired();
 
             });
+            #endregion
 
-
+            #region Patient configuration
             modelBuilder.Entity<Patient>(p =>
             {
                 p.HasKey(p => p.Id);
@@ -74,7 +78,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
 
 
             });
+            #endregion
 
+            #region Doctor configuration
             modelBuilder.Entity<Doctor>(d =>
             {
 
@@ -92,7 +98,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 d.Property(d => d.Cedula).IsRequired();
                 d.Property(d => d.ImgPath);
             });
+            #endregion
 
+            #region Lab test configuration
             modelBuilder.Entity<LabTest>(l =>
             {
 
@@ -105,7 +113,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 l.Property(l => l.ConsultingRoomId).IsRequired();
 
             });
+            #endregion
 
+            #region Lab test appointment configuration
             modelBuilder.Entity<LabTestAppointment>(l =>
             {
 
@@ -139,15 +149,17 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 l.Property(l => l.TestResult).HasMaxLength(150);
 
             });
+            #endregion
 
+            #region Appointment configuration
             modelBuilder.Entity<Appointment>(a =>
             {
                 a.HasKey(l => l.Id);
                 a.HasOne(l => l.ConsultingRoom);
                 a.HasOne(l => l.Doctor);
                 a.HasOne(l => l.Patient).WithMany(p => p.appointments)
-        .HasForeignKey(a => a.PatientId)
-        .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(a => a.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
                 a.HasMany(l => l.labTestAppointments);
                 a.HasOne(l => l.AppointmentState);
                 a.Property(l => l.AppointmentDate).IsRequired().HasConversion(v => v.ToDateTime(TimeOnly.MinValue), v => DateOnly.FromDateTime(v));
@@ -159,8 +171,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 a.Property(l => l.AppointmentStateId).IsRequired();
                 a.Property(l => l.PatientId).IsRequired();
             });
+            #endregion
 
-
+            #region User rol configuration
             modelBuilder.Entity<UserRol>(ur =>
             {
                 ur.HasKey(ur => ur.Id);
@@ -170,10 +183,10 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 new UserRol { Id = 1, Name = "Admin" },
                 new UserRol { Id = 2, Name = "Assistent" }
             );
-            }
+            });
+            #endregion
 
-            );
-
+            #region Appointment state configuration
             modelBuilder.Entity<AppointmentState>(ps =>
             {
                 ps.HasKey(ps => ps.Id);
@@ -184,9 +197,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                    new AppointmentState { Id = 2, Name = "Pending results" },
                    new AppointmentState { Id = 3, Name = "Completed" }
                   );
-            }
-
-            );
+            });
+            #endregion
         }
 
 
