@@ -52,31 +52,7 @@ namespace thirdAssignment.Presentation.Controllers
 
         }
 
-        // GET: PatientController/Details/5
-        public async Task<IActionResult> PatientDetails(Guid id)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-
-            Result<PatientModel> result = new();
-            try
-            {
-                result = await _patientService.GetById(id);
-
-                if (!result.IsSuccess)
-                {
-
-                }
-
-                return View(result.Data);
-
-            }
-            catch
-            {
-
-                throw;
-            }
-        }
 
         // GET: PatientController/Create
         public async Task<IActionResult> SavePatient()

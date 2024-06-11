@@ -106,7 +106,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
 
                 l.HasKey(l => l.Id);
                 l.HasOne(l => l.ConsultingRoom);
-                l.HasMany(l => l.labTestAppointments);
+                l.HasMany(l => l.labTestAppointments).WithOne(l => l.LabTest)
+                .HasForeignKey(l => l.LabTesttId)
+                .OnDelete(DeleteBehavior.NoAction);
                 l.Property(l => l.Name).IsRequired();
                 l.Property(l => l.Id).IsRequired();
                 l.Property(l => l.Description);
@@ -124,7 +126,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 .HasForeignKey(l => l.ConsultingRoomId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-                l.HasOne(l => l.Appointment).WithMany()
+                l.HasOne(l => l.Appointment).WithMany(a => a.labTestAppointments)
                 .HasForeignKey(l => l.AppointmetId)
                 .OnDelete(DeleteBehavior.NoAction); 
 
@@ -136,7 +138,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 .HasForeignKey(l => l.DoctorsId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-                l.HasOne(l => l.LabTest).WithMany()
+                l.HasOne(l => l.LabTest)
+                .WithMany( l => l.labTestAppointments )
                 .HasForeignKey(l => l.LabTesttId)
                 .OnDelete(DeleteBehavior.NoAction); 
 

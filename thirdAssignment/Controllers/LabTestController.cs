@@ -47,31 +47,6 @@ namespace thirdAssignment.Presentation.Controllers
 
         }
 
-        // GET: LabTestController/Details/5
-        public async Task<IActionResult> LabTestDetails(Guid id)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-
-
-            Result<LabTestModel> result = new();
-            try
-            {
-                result = await _labTestService.GetById(id);
-
-                if (!result.IsSuccess)
-                {
-
-                }
-
-                return View(result.Data);
-
-            }
-            catch
-            {
-
-                throw;
-            }
-        }
 
         // GET: LabTestController/Create
         public async Task<IActionResult> SaveLabTest()

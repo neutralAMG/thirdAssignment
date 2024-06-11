@@ -4,89 +4,103 @@
 @inject IHttpContextAccessor httpContext
 
 @{
-    UserModel user = httpContext.HttpContext!.Session.Get<UserModel>("user");
+	UserModel user = httpContext.HttpContext!.Session.Get<UserModel>("user");
 }
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - thirdAssignment</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/thirdAssignment.styles.css" asp-append-version="true" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - thirdAssignment</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/thirdAssignment.styles.css" asp-append-version="true" />
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                @if (user == null)
-                {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">thirdAssignment</a>
-                }
-                else
-                {
-                    <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Login">thirdAssignment</a>
-                }
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container-fluid">
+				@if (user == null)
+				{
+					<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">thirdAssignment</a>
+				}
+				else
+				{
+					<a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Login">thirdAssignment</a>
+				}
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (user != null)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">User</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Doctor" asp-action="Index">Doctors</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patients</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="LabResults" asp-action="Index">Test Results</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Appointment" asp-action="Index">Appointments</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container flex-grow-1">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+					<ul class="navbar-nav flex-grow-1">
+						@if (user != null)
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+							</li>
+							if (user.UserRol.Id == (int)thirdAssignment.Presentation.Utils.Enums.UserRolsModel.Admin)
+							{
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">User</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area="" asp-controller="Doctor" asp-action="Index">Doctors</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area="" asp-controller="LabTest" asp-action="Index">Lab test's</a>
+								</li>
+							}
+							else 
+							{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="LabResults" asp-action="Index">Test Results</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patients</a>
+							</li>
 
-    <footer class="border-top footer text-muted mt-auto">
-        <div class="container">
-            &copy; 2024 - thirdAssignment - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script type="text/javascript">
-        $(function () {
-            $('.timepicker').live('mousedown', function () {
-                $(this).timepicker({
-                    stepMinute: 15,
-                    hourMin: 7,
-                    hourMax: 19
-                });
-            });
-        });
-    </script>
-    @await RenderSectionAsync("Scripts", required: false)
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Appointment" asp-action="Index">Appointments</a>
+							</li>
+							}
+
+							<li class="nav-item ml-auto">
+								<a class="nav-link text-dark btn btn-info float-left p-0 m-0 nav-link" asp-area="" asp-controller="User" asp-action="LogOut">Logout</a>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container flex-grow-1">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="border-top footer text-muted mt-auto">
+		<div class="container">
+			&copy; 2024 - thirdAssignment - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script type="text/javascript">
+		$(function () {
+			$('.timepicker').live('mousedown', function () {
+				$(this).timepicker({
+					stepMinute: 15,
+					hourMin: 7,
+					hourMax: 19
+				});
+			});
+		});
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

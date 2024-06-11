@@ -49,33 +49,6 @@ namespace thirdAssignment.Presentation.Controllers
 
         }
 
-        // GET: DoctorController/Details/5
-        public async Task<IActionResult> DoctorDetails(Guid id)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-
-
-            Result<DoctorModel> result = new();
-            try
-            {
-                result = await _doctorService.GetById(id);
-
-                if (!result.IsSuccess)
-                {
-
-                }
-
-                return View(result.Data);
-
-            }
-            catch
-            {
-
-                throw;
-            }
-
-        }
-
         // GET: DoctorController/Create
         public async Task<IActionResult> SaveDoctor()
         {

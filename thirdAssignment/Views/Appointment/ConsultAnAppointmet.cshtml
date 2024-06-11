@@ -18,18 +18,18 @@
                 <section>
                     @using (Html.BeginForm("ConsultAnAppointmet", "Appointment", FormMethod.Post))
                     {
-                        @Html.HiddenFor(m => m.AppointmentModel.Id)  <!-- Hidden field to hold the appointment Id -->
-                        @Html.HiddenFor(m => m.AppointmentModel.Patient)  <!-- Hidden field to hold the doctor's Id -->
-                        @Html.HiddenFor(m => m.AppointmentModel.Doctor)  <!-- Hidden field to hold the doctor's name -->
+                        @Html.HiddenFor(m => m.AppointmentModel.Id)  
+                        @Html.HiddenFor(m => m.AppointmentModel.Patient)  
+                        @Html.HiddenFor(m => m.AppointmentModel.Doctor)  
                         <input type hidden name="DoctorId" value="@Model.AppointmentModel.Doctor.Id"  />
                         <input type hidden name="PatientId" value="@Model.AppointmentModel.Patient.Id" />
 
                     @for (int i = 0; i < Model.Checkboxes.Count; i++)
                         {
                             <div class="form-check">
-                                @Html.HiddenFor(m => Model.Checkboxes[i].Id) <!-- Hidden field to hold the checkbox Id -->
-                                @Html.CheckBoxFor(m => Model.Checkboxes[i].IsSelected, new { @class = "form-check-input" }) <!-- Checkbox -->
-                                @Html.LabelFor(m => Model.Checkboxes[i].IsSelected, Model.Checkboxes[i].Name, new { @class = "form-check-label" }) <!-- Label -->
+                                @Html.HiddenFor(m => Model.Checkboxes[i].Id) 
+                                @Html.CheckBoxFor(m => Model.Checkboxes[i].IsSelected, new { @class = "form-check-input" }) 
+                                @Html.LabelFor(m => Model.Checkboxes[i].IsSelected, Model.Checkboxes[i].Name, new { @class = "form-check-label" }) 
                             </div>
                         }
 

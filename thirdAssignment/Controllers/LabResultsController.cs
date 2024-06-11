@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using thirdAssignment.Aplication.Core;
 using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
@@ -57,6 +58,12 @@ namespace thirdAssignment.Presentation.Controllers
             {
                 var currentUser = HttpContext.Session.Get<UserModel>("user");
 
+                if (Cedula.IsNullOrEmpty())
+                {
+                    
+                    result = await _labTestAppointmentService.GetAllPending(currentUser.ConsultingRoom.Id);
+                    return View("Index", result.Data);
+                }
                 result = await _labTestAppointmentService.FilterByCedula(Cedula);
 
                 if (!result.IsSuccess)
@@ -73,31 +80,7 @@ namespace thirdAssignment.Presentation.Controllers
             }
 
         }
-        // GET: LabResultsController/Details/5
-        public async Task<IActionResult> LabTestResultDetails(Guid id)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-
-            Result<LabTestAppointmentModel> result = new();
-            try
-            {
-                result = await _labTestAppointmentService.GetById(id);
-
-                if (!result.IsSuccess)
-                {
-
-                }
-
-                return View(result.Data);
-
-            }
-            catch
-            {
-
-                throw;
-            }
-        }
 
         // GET: LabResultsController/Create
         public async Task<IActionResult> SaveLabTestResult()
@@ -194,56 +177,6 @@ namespace thirdAssignment.Presentation.Controllers
             }
         }
 
-        // GET: LabResultsController/Delete/5
-        public async Task<IActionResult> DeleteLabTestResult(Guid id)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-            Result<LabTestAppointmentModel> result = new();
-            try
-            {
-                result = await _labTestAppointmentService.GetById(id);
-
-                if (!result.IsSuccess)
-                {
-                    ViewBag.Message = result.Message;
-                    return RedirectToAction(nameof(Index));
-                }
-
-                return View(result.Data);
-
-            }
-            catch
-            {
-
-                throw;
-            }
-        }
-
-        // POST: LabResultsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteLabTestResult(Guid id, IFormCollection collection)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-
-            Result<LabTestAppointmentModel> result = new();
-            try
-            {
-                result = await _labTestAppointmentService.Delete(id);
-
-                if (!result.IsSuccess)
-                {
-                    ViewBag.Message = result.Message;
-                    return RedirectToAction(nameof(Index));
-                }
-                return RedirectToAction(nameof(Index));
-
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

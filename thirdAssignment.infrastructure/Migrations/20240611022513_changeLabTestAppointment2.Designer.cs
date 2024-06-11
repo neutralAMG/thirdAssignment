@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using thirdAssignment.Infrastructure.Persistence.Context;
 
@@ -11,9 +12,11 @@ using thirdAssignment.Infrastructure.Persistence.Context;
 namespace thirdAssignment.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(thirdAssignmentAppContext))]
-    partial class thirdAssignmentAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240611022513_changeLabTestAppointment2")]
+    partial class changeLabTestAppointment2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,7 +67,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.AppointmentState", b =>
@@ -81,7 +84,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppointmentStates", (string)null);
+                    b.ToTable("AppointmentStates");
 
                     b.HasData(
                         new
@@ -113,7 +116,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ConsultingRooms", (string)null);
+                    b.ToTable("ConsultingRooms");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.Doctor", b =>
@@ -152,7 +155,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId");
 
-                    b.ToTable("Doctors", (string)null);
+                    b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.LabTest", b =>
@@ -175,7 +178,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId");
 
-                    b.ToTable("LabTests", (string)null);
+                    b.ToTable("LabTests");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.LabTestAppointment", b =>
@@ -228,7 +231,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("LabtestAppointments", (string)null);
+                    b.ToTable("LabtestAppointments");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.Patient", b =>
@@ -280,7 +283,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId");
 
-                    b.ToTable("Patients", (string)null);
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.User", b =>
@@ -325,7 +328,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.UserRol", b =>
@@ -342,7 +345,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRols", (string)null);
+                    b.ToTable("UserRols");
 
                     b.HasData(
                         new

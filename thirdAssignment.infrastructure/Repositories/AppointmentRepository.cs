@@ -32,7 +32,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                Include(u => u.ConsultingRoom)
                .Include(a => a.Doctor)
                .Include(a => a.Patient)
-               .Include(a => a.labTestAppointments)
+               .Include(a => a.labTestAppointments).Include(a => a.labTestAppointments).ThenInclude(l => l.LabTest)
                .Include(a => a.AppointmentState)
                .FirstOrDefaultAsync( a => a.Id == id);
             }

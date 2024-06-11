@@ -36,15 +36,15 @@
                     <div class="col-md-1 text-right">
                         @if (state.Id == (int)thirdAssignment.Presentation.Utils.Enums.AppointmentStates.PendingCunsult)
                         {
-                            <a href="@Url.Action("ConsultAnAppointmet", "Appointment", new { id = appointment.Id })" class="btn btn-outline-warning btn-sm">Consult</a>
+                            <a href="@Url.Action("ConsultAnAppointmet", "Appointment", new { id = appointment.Id })" class="btn btn-outline-primary btn-sm">Consult</a>
                         }
                         else if (state.Id == (int)thirdAssignment.Presentation.Utils.Enums.AppointmentStates.PendingResult)
                         {
-                            <a href="@Url.Action("EditLabTestResult", "Appointment", new { id = appointment.Id })" class="btn btn-outline-danger btn-sm">Report Results</a>
+                            <a href="@Url.Action("ReportAppointmentResult", "Appointment", new { id = appointment.Id })" class="btn btn-outline-info btn-sm">Report Results</a>
                         }
                         else
                         {
-                            <a href="@Url.Action("EditLabTestResult", "Appointment", new { id = appointment.Id })" class="btn btn-outline-primary btn-sm">Check Results</a>
+                            <a href="@Url.Action("CheckAppointmentResult", "Appointment", new { id = appointment.Id })" class="btn btn-outline-success btn-sm">Check Results</a>
                         }
                     </div>
                 </div>

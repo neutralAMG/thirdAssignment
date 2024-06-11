@@ -115,6 +115,8 @@ namespace thirdAssignment.Presentation.Controllers
                 throw;
             }
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         // GET: AppointmentController/Details/5
@@ -168,6 +170,91 @@ namespace thirdAssignment.Presentation.Controllers
             }
         }
 
+        // GET: AppointmentController/Details/5
+        public async Task<IActionResult> ReportAppointmentResult(Guid id)
+        {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+
+            Result<AppointmentModel> result = new();
+            try
+            {
+                result = await _appointmentService.GetById(id);
+
+                if (!result.IsSuccess)
+                {
+
+                }
+                var currentUser = HttpContext.Session.Get<UserModel>("user");
+
+                return View(result.Data.labTestAppointments);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        // GET: AppointmentController/Details/5
+        public async Task<IActionResult> ReportAppointmentResult(Guid id, UpdateAppointmentsDto updateAppointmentsDto)
+        {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+            try
+            {
+
+                Result<AppointmentModel> result = new();
+
+                updateAppointmentsDto.AppointmentStateId = 3;
+
+                result = await _appointmentService.Update(updateAppointmentsDto);
+                if (!result.IsSuccess)
+                {
+                    Result<AppointmentModel> resultIner = new();
+                    resultIner = await _appointmentService.GetById(id);
+                    ViewBag.Message = result.Message;
+                    return View(resultIner.Data.labTestAppointments);
+                }
+                return RedirectToAction("Index");
+
+            }
+            catch
+            {
+
+                throw;
+            }
+        }
+
+        // GET: AppointmentController/Details/5
+        public async Task<IActionResult> CheckAppointmentResult(Guid id)
+        {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+
+            Result<AppointmentModel> result = new();
+            try
+            {
+                result = await _appointmentService.GetById(id);
+
+                if (!result.IsSuccess)
+                {
+
+                }
+                var currentUser = HttpContext.Session.Get<UserModel>("user");
+
+                return View(result.Data.labTestAppointments);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+        }
+
         // POST: AppointmentController/Create
         public async Task<IActionResult> SaveAppointment()
         {
@@ -209,112 +296,5 @@ namespace thirdAssignment.Presentation.Controllers
             }
         }
 
-        // GET: AppointmentController/Edit/5
-        public async Task<IActionResult> EditAppointment(Guid id)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-
-            Result<AppointmentModel> result = new();
-            try
-            {
-                result = await _appointmentService.GetById(id);
-
-                if (!result.IsSuccess)
-                {
-                    ViewBag.Message = result.Message;
-                    return RedirectToAction(nameof(Index));
-                }
-
-                return View(result.Data);
-
-            }
-            catch
-            {
-
-                throw;
-            }
-        }
-
-        // POST: AppointmentController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAppointment(Guid id, UpdateAppointmentsDto updateDto)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-
-            Result<AppointmentModel> result = new();
-            try
-            {
-
-
-                result = await _appointmentService.Update(updateDto);
-
-                if (!result.IsSuccess)
-                {
-                    Result<AppointmentModel> resultIner = new();
-
-                    resultIner = await _appointmentService.GetById(id);
-                    ViewBag.Message = result.Message;
-                    return View(resultIner.Data);
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AppointmentController/Delete/5
-        public async Task<IActionResult> DeleteAppointment(Guid id)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-
-            Result<AppointmentModel> result = new();
-            try
-            {
-                result = await _appointmentService.GetById(id);
-
-                if (!result.IsSuccess)
-                {
-                    ViewBag.Message = result.Message;
-                    return RedirectToAction(nameof(Index));
-                }
-
-                return View(result.Data);
-
-            }
-            catch
-            {
-
-                throw;
-            }
-        }
-
-        // POST: AppointmentController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAppointment(Guid id, IFormCollection collection)
-        {
-            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-
-            Result<AppointmentModel> result = new();
-            try
-            {
-                result = await _appointmentService.Delete(id);
-
-                if (!result.IsSuccess)
-                {
-                    ViewBag.Message = result.Message;
-                    return RedirectToAction(nameof(Index));
-                }
-                return RedirectToAction(nameof(Index));
-
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

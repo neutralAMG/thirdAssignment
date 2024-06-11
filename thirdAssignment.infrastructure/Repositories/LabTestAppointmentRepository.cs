@@ -38,7 +38,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             return await _appContext.LabtestAppointments
                 .Where(u => u.ConsultingRoomId == id && u.IsNotPending == false)
-                .Include(l => l.LabTest)
+                .Include(l => l.LabTest).Include(l => l.LabTest)
                 .Include(l => l.Doctor)
                 .Include(l => l.Appointment)
                 .Include(l => l.Patient)
@@ -51,7 +51,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
        //         if (await Exits(u => u.Id != id)) return null;
 
                 return await _appContext.LabtestAppointments
-                        .Include(l => l.LabTest)
+                        .Include(l => l.LabTest).Include(l => l.LabTest)
                          .Include(l => l.Doctor)
                          .Include(l => l.Appointment)
                          .FirstOrDefaultAsync(l => l.Id == id);
