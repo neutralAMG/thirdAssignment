@@ -66,7 +66,11 @@ namespace thirdAssignment.Presentation.Controllers
             Result<LabTestModel> result = new();
             try
             {
-
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View();
+                }
                 saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
 
                 result = await _labTestService.Save(saveDto);
@@ -93,6 +97,7 @@ namespace thirdAssignment.Presentation.Controllers
             Result<LabTestModel> result = new();
             try
             {
+
                 result = await _labTestService.GetById(id);
 
                 if (!result.IsSuccess)
@@ -121,7 +126,12 @@ namespace thirdAssignment.Presentation.Controllers
             Result<LabTestModel> result = new();
             try
             {
-
+                if (!ModelState.IsValid)
+                {
+                    result = await _labTestService.GetById(id);
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View(result.Data);
+                }
 
                 result = await _labTestService.Update(updateDto);
 

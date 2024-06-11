@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using thirdAssignment.Aplication.Core;
 using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Models;
+using thirdAssignment.Presentation.Utils;
 using thirdAssignment.Presentation.Utils.SessionHandler;
 using thirdAssignment.Presentation.Utils.UserValidations;
 
@@ -60,24 +62,37 @@ namespace thirdAssignment.Presentation.Controllers
         // POST: DoctorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveDoctor(SaveDoctorDto saveDto, IFormFile img)
+        public async Task<IActionResult> SaveDoctor(SaveDoctorDto saveDto)
         {
+            //IFormFile img
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
             Result<DoctorModel> result = new();
             try
             {
-                if(img != null)
+
+
+
+                //if (img != null)
+                //{
+                //    var path = Path.Combine(root,DateTime.Now.Ticks.ToString() + Path.GetExtension(img.FileName));
+                //     using(var stream = new FileStream(path, FileMode.Create))
+                //    {
+                //        await img.CopyToAsync(stream);
+                //    }
+                 
+                //}
+         
+
+                if (!ModelState.IsValid)
                 {
-                    var path = Path.Combine(root,DateTime.Now.Ticks.ToString() + Path.GetExtension(img.FileName));
-                     using(var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await img.CopyToAsync(stream);
-                    }
-                   saveDto.ImgPath = path;
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View();
                 }
-              
-              
+                if (saveDto.ImgPath.IsNullOrEmpty()){
+                    ViewBag.message = "the Imge field is requierd";
+                    return View();
+                }
                 saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
                 
                 result = await _doctorService.Save(saveDto);
@@ -136,7 +151,13 @@ namespace thirdAssignment.Presentation.Controllers
             try
             {
 
-
+                if (!ModelState.IsValid)
+                {
+                    
+                    result = await _doctorService.GetById(id);
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View(result.Data);
+                }
                 result = await _doctorService.Update(updateDto);
 
                 if (!result.IsSuccess)

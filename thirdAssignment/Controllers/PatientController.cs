@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using thirdAssignment.Aplication.Core;
 using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
@@ -67,22 +68,38 @@ namespace thirdAssignment.Presentation.Controllers
         // POST: PatientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SavePatient(SavePatientDto saveDto, IFormFile img, int smokes, int hasAlergies)
+        public async Task<IActionResult> SavePatient(SavePatientDto saveDto, int smokes, int hasAlergies)
+        
         {
+            //IFormFile img
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
             Result<PatientModel> result = new();
             try
             {
-                if (img != null)
+
+                if (!ModelState.IsValid)
                 {
-                    var path = Path.Combine(root, DateTime.Now.Ticks.ToString() + Path.GetExtension(img.FileName));
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await img.CopyToAsync(stream);
-                    }
-                    saveDto.ImgPath = path;
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View(_generateSelectList.GenereteCheckBoxList());
                 }
+                if (saveDto.ImgPath.IsNullOrEmpty())
+                {
+                    ViewBag.message = "the Imge field is requierd";
+                    return View();
+                }
+
+                //if (img != null)
+                //{
+                //    var path = Path.Combine(root, DateTime.Now.Ticks.ToString() + Path.GetExtension(img.FileName));
+                //    using (var stream = new FileStream(path, FileMode.Create))
+                //    {
+                //        await img.CopyToAsync(stream);
+                //    }
+                //    saveDto.ImgPath = path;
+                //}
+
+
                 saveDto.IsSmoker =  smokes == 1 ? true : false;
 
                 saveDto.HasAllergies = hasAlergies == 1? true : false;
@@ -113,6 +130,7 @@ namespace thirdAssignment.Presentation.Controllers
             Result<PatientModel> result = new();
             try
             {
+
                 result = await _patientService.GetById(id);
 
                 if (!result.IsSuccess)
@@ -141,6 +159,15 @@ namespace thirdAssignment.Presentation.Controllers
             Result<PatientModel> result = new();
             try
             {
+
+
+                if (!ModelState.IsValid)
+                {
+                    result = await _patientService.GetById(id);
+                   ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View(new EditPatientModel { Checkboxes = _generateSelectList.GenereteCheckBoxList(result.Data), patientModel = result.Data });
+                }
+
                 updateDto.IsSmoker = smokes == 1 ? true : false;
 
                 updateDto.HasAllergies = hasAlergies == 1 ? true : false;
@@ -154,7 +181,7 @@ namespace thirdAssignment.Presentation.Controllers
 
                     resultIner = await _patientService.GetById(id);
                     ViewBag.Message = result.Message;
-                    return View(new EditPatientModel { Checkboxes = _generateSelectList.GenereteCheckBoxList(result.Data), patientModel = result.Data });
+                    return View(new EditPatientModel { Checkboxes = _generateSelectList.GenereteCheckBoxList(resultIner.Data), patientModel = resultIner.Data });
                 }
                 return RedirectToAction(nameof(Index));
             }

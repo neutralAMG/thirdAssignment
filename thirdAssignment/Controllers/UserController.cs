@@ -71,7 +71,7 @@ namespace thirdAssignment.Presentation.Controllers
 
                 if (!result.IsSuccess)
                 {
-                    ViewBag.Message = result.Message;
+                    ViewBag.Message = "User not found check the username and password digited";
                     return View();
                 }
 
@@ -106,11 +106,18 @@ namespace thirdAssignment.Presentation.Controllers
             Result<UserModel> result = new();
             try
             {
+                if (!ModelState.IsValid)
+                {
+
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View(new UserModel());
+                }
+
 
                 if (saveUserDto.Password != PasswordConfirm)
                 {
                     ViewBag.Message = "the password's need to macth";
-                    return View();
+                    return View(new UserModel());
 
                 }
 
@@ -157,6 +164,13 @@ namespace thirdAssignment.Presentation.Controllers
                 userDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
 
                 userDto.ConsultingRoomName = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Name;
+
+                if (!ModelState.IsValid)
+                {
+
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View(_generateSelectList.GenereteRollsSelectList());
+                }
 
                 if (userDto.Password != PasswordConfirm)
                 {
@@ -219,15 +233,22 @@ namespace thirdAssignment.Presentation.Controllers
             try
             {
 
-                if (updateUserDto.Password != ConfirmPass)
+                if (!ModelState.IsValid)
                 {
 
-                    Result<UserModel> resultIner = new();
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    result = await _userService.GetById(id);
+                    return View(new EditUserViewModel { rolsChoises = _generateSelectList.GenereteRollsSelectList(result.Data), userToEdit = result.Data });
+                }
+
+                if (updateUserDto.Password != ConfirmPass)
+                {
                     ViewBag.Message = "the password's need to macth";
-                    resultIner = await _userService.GetById(id);
-                    return View(new EditUserViewModel { rolsChoises = _generateSelectList.GenereteRollsSelectList(resultIner.Data), userToEdit = resultIner.Data });
+                    result = await _userService.GetById(id);
+                    return View(new EditUserViewModel { rolsChoises = _generateSelectList.GenereteRollsSelectList(result.Data), userToEdit = result.Data });
                 }
                 
+
                 result = await _userService.Update(updateUserDto);
 
                 if (!result.IsSuccess)

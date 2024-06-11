@@ -274,7 +274,16 @@ namespace thirdAssignment.Presentation.Controllers
             Result<AppointmentModel> result = new();
             try
             {
-                var currentUser = HttpContext.Session.Get<UserModel>("user");
+               var currentUser = HttpContext.Session.Get<UserModel>("user");
+
+                if (!ModelState.IsValid)
+                {
+                  
+                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
+                    return View(new SaveAppointment { AppointmentList = _generateSelectList.ApoinmetsLists(currentUser.ConsultingRoom.Id, _patientService, _doctorService) });
+                }
+
+               
 
                 saveDto.ConsultingRoomId = currentUser.ConsultingRoom.Id;
 
@@ -285,7 +294,7 @@ namespace thirdAssignment.Presentation.Controllers
                 {
                     ViewBag.Message = result.Message;
 
-                    return View(_generateSelectList.ApoinmetsLists(currentUser.Id, _patientService, _doctorService));
+                    return View(new SaveAppointment { AppointmentList = _generateSelectList.ApoinmetsLists(currentUser.ConsultingRoom.Id, _patientService, _doctorService) });
                 }
 
                 return RedirectToAction(nameof(Index));
