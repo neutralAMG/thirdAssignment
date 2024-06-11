@@ -8,12 +8,12 @@ namespace thirdAssignment.Aplication.Dtos
         public DateOnly AppointmentDate { get; set; }
         public TimeOnly AppointmentTime { get; set; }
         public string AppointmentCause { get; set; }
-
+        public int AppointmentStateId { get; set; }
 
     }
     public record SaveAppointmentsDto : BaseAppointmentDto
     {
-        public int AppointmentStateId { get; set; }
+
         public Guid DoctorId { get; set; }
         public Guid PatientId { get; set; }
         public Guid ConsultingRoomId { get; set; }

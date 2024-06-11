@@ -1,5 +1,84 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model thirdAssignment.Presentation.Models.EditPatientModel
+
+@if (ViewBag.message is not null)
+{
+    <p class="alert-danger d-block text-center">@ViewBag.message</p>
 }
+<div class="row">
+    <div class="col-8 offset-2">
+        <div class=" bg-dark text-light">
+            <h1> Edit Patient</h1>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <section>
+                    <form method="post" asp-controller="Patient" asp-action="EditPatient">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <input type="type" name="Id" value="@Model.patientModel.Id" class="visually-hidden" />
+
+
+
+                        <div class="mb-3">
+                            <label for="Name" class="form-label"> Name</label>
+                            <input type="text" name="Name" value="@Model.patientModel.Name" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="LastName" class="form-label"> Last Name</label>
+                            <input type="text" name="LastName" value="@Model.patientModel.LastName" class="form-control" />
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="EMailAddress" class="form-label"> EMail Address </label>
+                            <input type="text" name="EMailAddress" value="@Model.patientModel.EMailAddress" class="form-control" />
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="PhoneNumber" class="form-label"> Phone Number</label>
+                            <input type="text" name="PhoneNumber" value="@Model.patientModel.PhoneNumber" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Cedula" class="form-label"> Cedula </label>
+                            <input type="text" name="Cedula" value="@Model.patientModel.Cedula" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="Address" class="form-label"> Address </label>
+                            <input type="text" name="Address" value="@Model.patientModel.Address" class="form-control" />
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="smokes" class="form-label"> smoke's </label>
+                            <select name="smokes" id="smokes" class="form-select" asp-items="@Model.Checkboxes[1]"> </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="hasAlergies" class="form-label"> Has allergie's </label>
+                            <select name="RolId" id="hasAlergies" class="form-select" asp-items="Model.Checkboxes[2]"> </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="BirthDate" class="form-label"> Birth date </label>
+                            <input type="date" name="BirthDate" value="@Model.patientModel.BirthDate.ToString("yyyy-MM-dd")" min="1900-01-01" max="2099-12-31" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="img" class="form-label"> Image </label>
+                            <input type="file" name="img" value="@Model.patientModel.ImgPath" class="form-control" />
+                        </div>
+
+                        <div class="p-2">
+                            <button asp-controller="Patient" asp-action="EditPatient" class="btn btn-primary  float-end  p-2  "> Edit </button>
+                            <button asp-controller="Patient" asp-action="index" class="btn btn-outline-warning  float-end  p-2  mx-2"> Go Back </button>
+                        </div>
+                    </form>
+
+                </section>
+
+            </div>
+        </div>
+    </div>
+</div>

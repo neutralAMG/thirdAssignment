@@ -53,7 +53,13 @@ namespace thirdAssignment.Aplication.Utils.Mapper
 
             #endregion
 
- 
+             #region Appointment state mappings
+
+            CreateMap<AppointmentState, AppointmentStateModel>()
+               .ReverseMap()
+               .ForMember(dest => dest.appointments, opt => opt.Ignore());
+
+            #endregion
 
             #region Doctor mappings
 
@@ -151,9 +157,8 @@ namespace thirdAssignment.Aplication.Utils.Mapper
             #endregion
 
             #region Lab test appointments mappings
-            CreateMap<LabTestAppointment, LabTestAppointment>()
+            CreateMap<LabTestAppointment, LabTestAppointmentModel>()
                 .ForMember(dest => dest.Patient, opt => opt.MapFrom(src => src.Patient))
-                .ForMember(dest => dest.ConsultingRoom, opt => opt.MapFrom(src => src.ConsultingRoom))
                 .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
                 .ForMember(dest => dest.Appointment, opt => opt.MapFrom(src => src.Appointment))
                 .ForMember(dest => dest.LabTest, opt => opt.MapFrom(src => src.LabTest))
@@ -182,13 +187,7 @@ namespace thirdAssignment.Aplication.Utils.Mapper
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore());
             #endregion
 
-            #region Appointment state mappings
 
-            CreateMap<AppointmentState, AppointmentStateModel>()
-               .ReverseMap()
-               .ForMember(dest => dest.appointments, opt => opt.Ignore());
-
-            #endregion
         }
     }
 }

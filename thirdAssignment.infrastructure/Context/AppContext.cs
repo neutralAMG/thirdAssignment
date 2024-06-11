@@ -86,9 +86,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
 
                 d.HasKey(d => d.Id);
                 d.HasOne(d => d.ConsultingRoom).WithMany(cr => cr.doctors)
-                .HasForeignKey(a => a.Id).OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(a => a.ConsultingRoomId).OnDelete(DeleteBehavior.Cascade);
                 d.HasMany(d => d.appointments).WithOne(cr => cr.Doctor)
-                .HasForeignKey(a => a.Id).OnDelete(DeleteBehavior.Restrict); ;
+                .HasForeignKey(a => a.DoctorId).OnDelete(DeleteBehavior.NoAction); 
                 d.Property(d => d.Name).IsRequired();
                 d.Property(d => d.Id).IsRequired();
                 d.Property(d => d.ConsultingRoomId).IsRequired();

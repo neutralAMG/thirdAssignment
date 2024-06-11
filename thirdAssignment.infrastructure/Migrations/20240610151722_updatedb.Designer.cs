@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using thirdAssignment.Infrastructure.Persistence.Context;
 
@@ -11,9 +12,11 @@ using thirdAssignment.Infrastructure.Persistence.Context;
 namespace thirdAssignment.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(thirdAssignmentAppContext))]
-    partial class thirdAssignmentAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240610151722_updatedb")]
+    partial class updatedb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,6 +47,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("ConsultingRoomId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ConsultingRoomId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -60,7 +66,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId");
 
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("ConsultingRoomId1");
 
                     b.HasIndex("PatientId");
 
@@ -119,7 +125,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("thirdAssignment.Domain.Entities.Doctor", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Cedula")
@@ -149,8 +154,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ConsultingRoomId");
 
                     b.ToTable("Doctors");
                 });
@@ -375,16 +378,16 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", "ConsultingRoom")
-                        .WithMany("appointments")
-                        .HasForeignKey("ConsultingRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("thirdAssignment.Domain.Entities.Doctor", "Doctor")
                         .WithMany("appointments")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("ConsultingRoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", "ConsultingRoom")
+                        .WithMany("appointments")
+                        .HasForeignKey("ConsultingRoomId1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("thirdAssignment.Domain.Entities.Patient", "Patient")
@@ -406,7 +409,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", "ConsultingRoom")
                         .WithMany("doctors")
-                        .HasForeignKey("ConsultingRoomId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

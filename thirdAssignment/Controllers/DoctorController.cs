@@ -13,6 +13,7 @@ namespace thirdAssignment.Presentation.Controllers
     {
         private readonly IDoctorService _doctorService;
         private readonly UserValidations _userValidations;
+        private readonly string root = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot") ;
 
         public DoctorController(IDoctorService doctorService, UserValidations userValidations)
         {
@@ -35,6 +36,7 @@ namespace thirdAssignment.Presentation.Controllers
                 {
 
                 }
+          //      var displayData = result.Data.Where(d => d.ImgPath = Directory.GetFiles(root,".png").Select(Path.GetFileName) ).ToList();
                 return View(result.Data);
 
             }
@@ -85,16 +87,26 @@ namespace thirdAssignment.Presentation.Controllers
         // POST: DoctorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveDoctor(SaveDoctorDto saveDto)
+        public async Task<IActionResult> SaveDoctor(SaveDoctorDto saveDto, IFormFile img)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
             Result<DoctorModel> result = new();
             try
             {
-
+                if(img != null)
+                {
+                    var path = Path.Combine(root,DateTime.Now.Ticks.ToString() + Path.GetExtension(img.FileName));
+                     using(var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await img.CopyToAsync(stream);
+                    }
+                   saveDto.ImgPath = path;
+                }
+              
+              
                 saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
-
+                
                 result = await _doctorService.Save(saveDto);
 
                 if (!result.IsSuccess)
@@ -211,11 +223,8 @@ namespace thirdAssignment.Presentation.Controllers
 
                 if (!result.IsSuccess)
                 {
-                    Result<DoctorModel> resultIner = new();
-
-                    resultIner = await _doctorService.GetById(id);
                     ViewBag.Message = result.Message;
-                    return View(resultIner.Data);
+                    return RedirectToAction(nameof(Index));
                 }
                 return RedirectToAction(nameof(Index));
 

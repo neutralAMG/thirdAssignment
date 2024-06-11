@@ -8,8 +8,7 @@ namespace thirdAssignment.Domain.Entities
     {
         public Patient()
         {
-            IsSmoker = false;
-            HasAllergies = false;
+
         }
         public string Address { get; set; }
         public bool IsSmoker { get; set; }

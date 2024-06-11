@@ -1,5 +1,47 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<thirdAssignment.Aplication.Models.PatientModel>
+
+
+<div class="container">
+	<div class="row mb-4">
+		<div class="d-flex justify-content-end mb-4">
+			<a asp-controller="Patient" asp-action="SavePatient" class="btn btn-primary">Add a new patient</a>
+		</div>
+		<div class="mt-5">
+			@if (Model.Count == 0)
+			{
+				<h1>There are no patients created</h1>
+			}
+			else
+			{
+				<div class="row">
+					@foreach (var doctor in Model)
+					{
+
+						var IsASmoker = @doctor.IsSmoker == true ? "Smoke's" : "Dosent smoke's";
+						var HasAlegies = @doctor.HasAllergies == true ? "Has alergies" : "Dosent have any allergies";
+
+						<div class="col-md-6 col-lg-4 mb-4">
+							<div class="card h-100 shadow-sm d-flex flex-column">
+								<img href="@doctor.ImgPath" alt="Image of @doctor.Name" class="card-img-top img-fluid" />
+								<div class="card-body flex-grow-1">
+									<h5 class="card-title">@doctor.Name, @doctor.LastName</h5>
+									<p class="card-text">
+										<strong>Email:</strong> @doctor.EMailAddress<br />
+										<strong>Phone Number:</strong> @doctor.PhoneNumber<br />
+										<strong>Cedula:</strong> @doctor.Cedula<br />
+										<strong>Addres:</strong> @doctor.Address<br />
+										<strong>BirthDate:</strong> @doctor.BirthDate.ToString()<br />
+										<strong>Smokes:</strong> @IsASmoker<br />
+										<strong>Has Allergies:</strong> @HasAlegies <br />
+									</p>
+								</div>
+								<div class="card-footer bg-white border-top-0 d-flex justify-content-end">
+									<a href="@Url.Action("EditPatient", "Patient", new { id = doctor.Id })" class="btn btn-outline-warning mr-2 m-1">Edit</a>
+									<a href="@Url.Action("DeletePatient", "Patient", new { id = doctor.Id })" class="btn btn-danger  m-1">Delete</a>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			}
+		</div>

@@ -1,8 +1,71 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@using Microsoft.AspNetCore.Http
+@using thirdAssignment.Aplication.Models
+@using thirdAssignment.Presentation.Models
+@using thirdAssignment.Presentation.Utils.SessionHandler
+@inject IHttpContextAccessor httpContext
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+    UserModel user = httpContext.HttpContext!.Session.Get<UserModel>("user");
+}
+<div class="d-flex flex-column min-vh-100">
+    <div class="container d-flex flex-grow-1 justify-content-center align-items-center">
+        <div class="text-center">
+            <h1 class="display-4 mb-4">Menu</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    @if (user.UserRol.Id == ValuesHelper.GetRols()[thirdAssignment.Presentation.Utils.Enums.UserRolsModel.Admin].Id)
+                    {
+                        <a asp-controller="User" asp-action="index" class="btn btn-user-maintenance btn-block my-3">User Maintenance</a>
+                        <a asp-controller="Doctor" asp-action="index" class="btn btn-doctor-maintenance btn-block my-3">Doctor Maintenance</a>
+                        <a asp-controller="LabTest" asp-action="index" class="btn btn-labtest-maintenance btn-block my-3">LabTest Maintenance</a>
+                    }
+                    else if (user.UserRol.Id == ValuesHelper.GetRols()[thirdAssignment.Presentation.Utils.Enums.UserRolsModel.Assistent].Id)
+                    {
+                        <a asp-controller="Patient" asp-action="index" class="btn btn-patient-maintenance btn-block my-3">Patient Maintenance</a>
+                        <a asp-controller="LabResults" asp-action="index" class="btn btn-labtestresults-maintenance btn-block my-3">LabTestResults Maintenance</a>
+                        <a asp-controller="Appointment" asp-action="index" class="btn btn-appointment-maintenance btn-block my-3">Appointment Maintenance</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<style>
+    .btn {
+        font-size: 1.5rem; /* Increase font size */
+        padding: 10px; /* Reduce padding */
+    }
+
+    .btn-user-maintenance {
+        background-color: #ffc107;
+        color: #fff;
+    }
+
+    .btn-doctor-maintenance {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-labtest-maintenance {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-patient-maintenance {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .btn-labtestresults-maintenance {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .btn-appointment-maintenance {
+        background-color: #6c757d;
+        color: #fff;
+    }
+</style>

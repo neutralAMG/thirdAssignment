@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using thirdAssignment.Aplication.Core;
+using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
+using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Services;
+using thirdAssignment.Presentation.Utils.SessionHandler;
 using thirdAssignment.Presentation.Utils.UserValidations;
 
 namespace thirdAssignment.Presentation.Controllers
@@ -16,22 +21,86 @@ namespace thirdAssignment.Presentation.Controllers
 			_userValidations = userValidations;
 		}
         // GET: LabResultsController
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-			return View();
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+            Result<List<LabTestAppointmentModel>> result = new();
+            try
+            {
+                var currentUser = HttpContext.Session.Get<UserModel>("user");
+
+                result = await _labTestAppointmentService.GetAllPending(currentUser.ConsultingRoom.Id);
+
+                if (!result.IsSuccess)
+                {
+
+                }
+                return View(result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+
         }
-
-        // GET: LabResultsController/Details/5
-        public ActionResult Details(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FilterByCedula(string Cedula)
         {
-			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-			return View();
+            Result<List<LabTestAppointmentModel>> result = new();
+            try
+            {
+                var currentUser = HttpContext.Session.Get<UserModel>("user");
+
+                result = await _labTestAppointmentService.FilterByCedula(Cedula);
+
+                if (!result.IsSuccess)
+                {
+
+                }
+                return View("Index", result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+
+        }
+        // GET: LabResultsController/Details/5
+        public async Task<IActionResult> LabTestResultDetails(Guid id)
+        {
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+
+
+            Result<LabTestAppointmentModel> result = new();
+            try
+            {
+                result = await _labTestAppointmentService.GetById(id);
+
+                if (!result.IsSuccess)
+                {
+
+                }
+
+                return View(result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
         }
 
         // GET: LabResultsController/Create
-        public ActionResult Create()
+        public async Task<IActionResult> SaveLabTestResult()
         {
 			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
@@ -41,12 +110,24 @@ namespace thirdAssignment.Presentation.Controllers
         // POST: LabResultsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> SaveLabTestResult(SaveLabTestAppointmentDto saveDto)
         {
-			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-			try
+            Result<LabTestAppointmentModel> result = new();
+            try
             {
+
+                saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
+
+                result = await _labTestAppointmentService.Save(saveDto);
+
+                if (!result.IsSuccess)
+                {
+                    ViewBag.Message = result.Message;
+                    return View();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -56,22 +137,55 @@ namespace thirdAssignment.Presentation.Controllers
         }
 
         // GET: LabResultsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> EditLabTestResult(Guid id)
         {
-			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-			return View();
+            Result<LabTestAppointmentModel> result = new();
+            try
+            {
+                result = await _labTestAppointmentService.GetById(id);
+
+                if (!result.IsSuccess)
+                {
+                    ViewBag.Message = result.Message;
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
+
         }
 
         // POST: LabResultsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> EditLabTestResult(Guid id, UpdateLabTestAppointmentDto updateDto)
         {
-			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-			try
+            Result<LabTestAppointmentModel> result = new();
+            try
             {
+
+                updateDto.IsNotPending = true;
+
+                result = await _labTestAppointmentService.Update(updateDto);
+
+                if (!result.IsSuccess)
+                {
+                    Result<LabTestAppointmentModel> resultIner = new();
+
+                    resultIner = await _labTestAppointmentService.GetById(id);
+                    ViewBag.Message = result.Message;
+                    return View(resultIner.Data);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -81,23 +195,50 @@ namespace thirdAssignment.Presentation.Controllers
         }
 
         // GET: LabResultsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> DeleteLabTestResult(Guid id)
         {
-			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-			return View();
+            Result<LabTestAppointmentModel> result = new();
+            try
+            {
+                result = await _labTestAppointmentService.GetById(id);
+
+                if (!result.IsSuccess)
+                {
+                    ViewBag.Message = result.Message;
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(result.Data);
+
+            }
+            catch
+            {
+
+                throw;
+            }
         }
 
         // POST: LabResultsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteLabTestResult(Guid id, IFormCollection collection)
         {
-			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
-			try
+            Result<LabTestAppointmentModel> result = new();
+            try
             {
+                result = await _labTestAppointmentService.Delete(id);
+
+                if (!result.IsSuccess)
+                {
+                    ViewBag.Message = result.Message;
+                    return RedirectToAction(nameof(Index));
+                }
                 return RedirectToAction(nameof(Index));
+
             }
             catch
             {

@@ -5,6 +5,8 @@ using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Models;
 using thirdAssignment.Aplication.Services;
+using thirdAssignment.Presentation.Models;
+using thirdAssignment.Presentation.Utils;
 using thirdAssignment.Presentation.Utils.SessionHandler;
 using thirdAssignment.Presentation.Utils.UserValidations;
 
@@ -14,12 +16,14 @@ namespace thirdAssignment.Presentation.Controllers
     {
 		private readonly IPatientService _patientService;
 		private readonly UserValidations _userValidations;
-
-		public PatientController(IPatientService patientService ,UserValidations userValidations)
+        private readonly GenerateSelectList _generateSelectList;
+        private readonly string root = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        public PatientController(IPatientService patientService ,UserValidations userValidations, GenerateSelectList generateSelectList)
         {
 			_patientService = patientService;
 			_userValidations = userValidations;
-		}
+            _generateSelectList = generateSelectList;
+        }
         // GET: PatientController
         public async Task<IActionResult> Index()
         {
@@ -78,19 +82,34 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> SavePatient()
         {
 			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
-			return View();
+            ViewBag.IsSmoker= true;
+            ViewBag.HasAllergies = true;
+
+            return View(_generateSelectList.GenereteCheckBoxList());
         }
 
         // POST: PatientController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SavePatient(SavePatientDto saveDto)
+        public async Task<IActionResult> SavePatient(SavePatientDto saveDto, IFormFile img, int smokes, int hasAlergies)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
             Result<PatientModel> result = new();
             try
             {
+                if (img != null)
+                {
+                    var path = Path.Combine(root, DateTime.Now.Ticks.ToString() + Path.GetExtension(img.FileName));
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await img.CopyToAsync(stream);
+                    }
+                    saveDto.ImgPath = path;
+                }
+                saveDto.IsSmoker =  smokes == 1 ? true : false;
+
+                saveDto.HasAllergies = hasAlergies == 1? true : false;
 
                 saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
 
@@ -126,7 +145,7 @@ namespace thirdAssignment.Presentation.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                return View(result.Data);
+                return View(new EditPatientModel{ Checkboxes = _generateSelectList.GenereteCheckBoxList(result.Data), patientModel= result.Data} );
 
             }
             catch
@@ -139,16 +158,19 @@ namespace thirdAssignment.Presentation.Controllers
         // POST: PatientController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPatient(Guid id, UpdatePatientDto updateDto)
+        public async Task<IActionResult> EditPatient(Guid id, UpdatePatientDto updateDto, int smokes, int hasAlergies)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
 
             Result<PatientModel> result = new();
             try
             {
+                updateDto.IsSmoker = smokes == 1 ? true : false;
 
+                updateDto.HasAllergies = hasAlergies == 1 ? true : false;
 
                 result = await _patientService.Update(updateDto);
+
 
                 if (!result.IsSuccess)
                 {
@@ -156,7 +178,7 @@ namespace thirdAssignment.Presentation.Controllers
 
                     resultIner = await _patientService.GetById(id);
                     ViewBag.Message = result.Message;
-                    return View(resultIner.Data);
+                    return View(new EditPatientModel { Checkboxes = _generateSelectList.GenereteCheckBoxList(result.Data), patientModel = result.Data });
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -206,11 +228,8 @@ namespace thirdAssignment.Presentation.Controllers
 
                 if (!result.IsSuccess)
                 {
-                    Result<PatientModel> resultIner = new();
-
-                    resultIner = await _patientService.GetById(id);
                     ViewBag.Message = result.Message;
-                    return View(resultIner.Data);
+                    return RedirectToAction(nameof(Index));
                 }
                 return RedirectToAction(nameof(Index));
 

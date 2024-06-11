@@ -34,7 +34,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(lt => lt.Id != id)) return null;
+              //  if (await Exits(lt => lt.Id != id)) return null;
 
                 return await base.GetById(id);
                     
@@ -52,7 +52,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(lt => lt.Name == entity.Name)) return;
+             //   if (await Exits(lt => lt.Name == entity.Name)) return;
 
                 await base.Save(entity);
 
@@ -68,7 +68,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(lt => lt.Id != entity.Id)) return;
+           //     if (await Exits(lt => lt.Id != entity.Id)) return;
 
                 LabTest LabTestToBeUpdated = await GetById(entity.Id);
 
@@ -90,7 +90,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(lt => lt.Id != entity.Id)) return;
+           //     if (await Exits(lt => lt.Id != entity.Id)) return;
 
                 LabTest LabTestToBeDeleted = await GetById(entity.Id);
 

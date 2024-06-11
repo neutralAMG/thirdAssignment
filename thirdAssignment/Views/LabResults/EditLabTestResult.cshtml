@@ -1,0 +1,31 @@
+﻿@model thirdAssignment.Aplication.Models.LabTestAppointmentModel
+@if (ViewBag.message is not null)
+{
+    <p class="alert-danger d-block text-center">@ViewBag.message</p>
+}
+<div class="row">
+    <div class="col-8 offset-2">
+        <div class=" bg-dark text-light">
+            <h1 class="text-center"> Report Results</h1>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <section>
+                    <form method="post" asp-controller="LabResults" asp-action="EditLabTestResult">
+
+                        <input type="text" name="Id" class="visually-hidden" value="@Model.Id" />
+                        <div class="mb-3">
+                            <label for="TestResult" class="form-label"> Result</label>
+                            <input type="text" name="TestResult" class="form-control" value="@Model.TestResult" />
+                        </div>
+                        <div class="p-2">
+                            <button asp-controller="LabResults" asp-action="EditLabTestResult" class="btn btn-primary  float-end  p-2 "> Save result </button>
+                            <a asp-controller="LabResults" asp-action="Index" class="btn btn-outline-warning  float-end  p-2  mx-2"> Go Back </a>
+                        </div>
+                    </form>
+
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

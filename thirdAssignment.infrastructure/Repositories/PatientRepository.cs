@@ -31,7 +31,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Id != id)) return null;
+              //  if (await Exits(u => u.Id != id)) return null;
 
                 return await base.GetById(id);
                     //_appContext.Patients.FirstOrDefaultAsync(u => u.Id == id);
@@ -68,7 +68,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Id != entity.Id)) return;
+             //   if (await Exits(u => u.Id != entity.Id)) return;
 
                 Patient PatientToBeUpdated = await GetById(entity.Id);
 
@@ -105,7 +105,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Id != entity.Id)) return;
+             //   if (await Exits(u => u.Id != entity.Id)) return;
 
                 Patient PatientToBeDeleted = await GetById(entity.Id);
 

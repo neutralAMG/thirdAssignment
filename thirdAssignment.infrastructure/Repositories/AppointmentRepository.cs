@@ -26,13 +26,15 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(d => d.Id != id)) return null;
+          //      if (await Exits(d => d.Id != id)) return null;
 
-                return await _appContext.Appointments.Where(u => u.ConsultingRoomId == id).
+                return await _appContext.Appointments.
                Include(u => u.ConsultingRoom)
                .Include(a => a.Doctor)
                .Include(a => a.Patient)
-               .Include(a => a.labTestAppointments).FirstOrDefaultAsync( a => a.Id == id);
+               .Include(a => a.labTestAppointments)
+               .Include(a => a.AppointmentState)
+               .FirstOrDefaultAsync( a => a.Id == id);
             }
             catch 
             {
@@ -47,7 +49,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                Include(u => u.ConsultingRoom)
                .Include(a => a.Doctor)
                .Include(a => a.Patient)
-               .Include(a => a.labTestAppointments).ToListAsync();
+               .Include(a => a.labTestAppointments)
+                .Include(a => a.AppointmentState).ToListAsync();
             
         }
    
@@ -56,6 +59,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
+                entity.Name = $"Apointment for {entity.AppointmentDate} on {entity.AppointmentTime} ";
                 await base.Save(entity);
 
             }
@@ -69,7 +73,23 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         public override async Task Update(Appointment entity)
         {
-            await base.Update(entity);
+            try
+            {
+                //   if (await Exits(u => u.Id != entity.Id)) return;
+
+                Appointment AppointmentToBeUpdated = await GetById(entity.Id);
+
+
+                AppointmentToBeUpdated.AppointmentStateId = entity.AppointmentStateId;
+
+                await base.Update(AppointmentToBeUpdated);
+
+            }
+            catch
+            {
+                throw;
+            }
+            
         }
 
         public override async Task Delete(Appointment entity)

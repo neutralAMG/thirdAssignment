@@ -14,12 +14,12 @@ namespace thirdAssignment.Aplication.Dtos
         public string? ImgPath { get; set; }
         public string LastName { get; set; }
         public string EMailAddress { get; set; }
-
+        public DateOnly BirthDate { get; set; }  
     }
 
     public record SavePatientDto : BasePatientDto
     {
-        public DateOnly BirthDate { get; set; }  
+
         public Guid ConsultingRoomId { get; set; }
     }
     public record UpdatePatientDto : BasePatientDto

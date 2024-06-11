@@ -17,14 +17,14 @@ namespace thirdAssignment.Presentation.Models
         }
 
 
-        public static Dictionary<Enum, AppointmentStateModel> GetAppointmentState()
+        public static Dictionary<int, AppointmentStateModel> GetAppointmentState()
         {
-            Dictionary<Enum, AppointmentStateModel> AppointmentState = new()
+            Dictionary<int, AppointmentStateModel> AppointmentState = new()
             {
 
-                { AppointmentStates.PendingCunsult, new AppointmentStateModel { Id = 1, Name = "Pending consultation" } },
-                {AppointmentStates.PendingResult, new AppointmentStateModel { Id = 2, Name = "Pending results" } },
-                {AppointmentStates.Compleate, new AppointmentStateModel { Id = 3, Name = "Completed" } }
+                {(int)AppointmentStates.PendingCunsult, new AppointmentStateModel { Id = 1, Name = "Pending consultation" } },
+                {(int)AppointmentStates.PendingResult, new AppointmentStateModel { Id = 2, Name = "Pending results" } },
+                {(int)AppointmentStates.Compleate, new AppointmentStateModel { Id = 3, Name = "Completed" } }
             };
             return AppointmentState;
         }

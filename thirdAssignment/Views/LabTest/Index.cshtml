@@ -1,5 +1,32 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿﻿
+@model List<thirdAssignment.Aplication.Models.LabTestModel>
+
+
+<div class="container mt-4">
+    <a asp-controller="LabTest" asp-action="SaveLabTest" class="btn btn-primary mb-4">Add a new Lab Test</a>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var LabTest in Model)
+                {
+                    <tr>
+                        <td>@LabTest.Name</td>
+                        <td class="text-center">
+                            <a href="@Url.Action("EditLabTest", "LabTest", new { id = LabTest.Id })" class="btn btn-info btn-sm">Edit</a>
+                        </td>
+                        <td class="text-center">
+                            <a href="@Url.Action("DeleteLabTest", "LabTest", new { id = LabTest.Id })" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

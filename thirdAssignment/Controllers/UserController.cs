@@ -40,8 +40,8 @@ namespace thirdAssignment.Presentation.Controllers
                 {
 
                 }
-                List<UserModel> ListToUse = result.Data.Where(u => u.Id != currentUser.Id).ToList();
-                return View(ListToUse);
+               
+                return View(result.Data);
 
             }
             catch
@@ -251,7 +251,7 @@ namespace thirdAssignment.Presentation.Controllers
                     resultIner = await _userService.GetById(id);
                     return View(new EditUserViewModel { rolsChoises = _generateSelectList.GenereteRollsSelectList(resultIner.Data), userToEdit = resultIner.Data });
                 }
-
+                
                 result = await _userService.Update(updateUserDto);
 
                 if (!result.IsSuccess)
@@ -315,7 +315,7 @@ namespace thirdAssignment.Presentation.Controllers
 
                     resultIner = await _userService.GetById(id);
                     ViewBag.Message = result.Message;
-                    return View(resultIner.Data);
+                    return RedirectToAction(nameof(Index));
                 }
                 return RedirectToAction(nameof(Index));
 

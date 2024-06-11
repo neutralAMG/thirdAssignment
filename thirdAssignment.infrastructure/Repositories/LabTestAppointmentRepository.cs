@@ -31,25 +31,26 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 .Include(l => l.LabTest)
                 .Include(l => l.Doctor)
                 .Include(l => l.Appointment)
+                .Include(l => l.Patient)
                 .ToListAsync();
         }
         public async Task<List<LabTestAppointment>> GetAllPending(Guid id)
         {
             return await _appContext.LabtestAppointments
-                .Where(u => u.ConsultingRoomId == id || u.IsNotPending == false)
+                .Where(u => u.ConsultingRoomId == id && u.IsNotPending == false)
                 .Include(l => l.LabTest)
                 .Include(l => l.Doctor)
                 .Include(l => l.Appointment)
+                .Include(l => l.Patient)
                 .ToListAsync();
         }
         public override async Task<LabTestAppointment> GetById(Guid id)
         {
             try
             {
-                if (await Exits(u => u.Id != id)) return null;
+       //         if (await Exits(u => u.Id != id)) return null;
 
                 return await _appContext.LabtestAppointments
-                        .Where(u => u.ConsultingRoomId == id)
                         .Include(l => l.LabTest)
                          .Include(l => l.Doctor)
                          .Include(l => l.Appointment)
@@ -69,6 +70,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
+                entity.Name = $" test's for the appointment {entity.AppointmetId}";
+                entity.IsNotPending = false;
+                entity.TestResult = "";
                 await base.Save(entity);
 
             }
@@ -82,11 +86,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Id != entity.Id)) return;
+              //  if (await Exits(u => u.Id != entity.Id)) return;
 
                 LabTestAppointment LabTestAppointmentToBeUpdated = await GetById(entity.Id);
-
-                LabTestAppointmentToBeUpdated.Name = entity.Name;
 
                 LabTestAppointmentToBeUpdated.TestResult = entity.TestResult;
 
@@ -105,7 +107,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Id != entity.Id)) return;
+             //   if (await Exits(u => u.Id != entity.Id)) return;
 
                 LabTestAppointment LabTestAppointmentToBeDeleted = await GetById(entity.Id);
 
@@ -120,10 +122,12 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         public async Task<List<LabTestAppointment>> FilterByCedula(string cedulaa)
         {
-            return await _appContext.LabtestAppointments.Where(l => l.Patient.Cedula == cedulaa || l.IsNotPending == false)
+            return await _appContext.LabtestAppointments.Where(l => l.Patient.Cedula == cedulaa && l.IsNotPending == false)
                           .Include(l => l.LabTest)
                          .Include(l => l.Doctor)
-                         .Include(l => l.Appointment).ToListAsync();
+                         .Include(l => l.Appointment)
+                         .Include(l => l.Patient)
+                         .ToListAsync();
         }
 
     }

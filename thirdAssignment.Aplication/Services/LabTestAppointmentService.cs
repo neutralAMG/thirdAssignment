@@ -11,7 +11,7 @@ using thirdAssignment.Domain.Entities;
 
 namespace thirdAssignment.Aplication.Services
 {
-    public class LabTestAppointmentService : BaseService<SaveLabTestAppointmentDto, UpdateLabTestDto, LabTestAppointmentModel, LabTestAppointment>, ILabTestAppointmentService
+    public class LabTestAppointmentService : BaseService<SaveLabTestAppointmentDto, UpdateLabTestAppointmentDto, LabTestAppointmentModel, LabTestAppointment>, ILabTestAppointmentService
     {
         private readonly ILabTestAppointmentRepository _testAppointmentRepository;
         private readonly IMapper _mapper;

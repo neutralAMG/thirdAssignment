@@ -34,7 +34,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(d => d.Id != id)) return null;
+         //       if (await Exits(d => d.Id != id)) return null;
 
                 return await base.GetById(id);
             }
@@ -64,7 +64,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
             try
             {
-                if (await Exits(d => d.Id != entity.Id)) return;
+//                if (await Exits(d => d.Id != entity.Id)) return;
 
                 Doctor DoctorToBeUpdated = await GetById(entity.Id);
 
@@ -94,7 +94,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                if (await Exits(u => u.Id != entity.Id)) return;
+       //         if (await Exits(u => u.Id != entity.Id)) return;
 
                 Doctor DoctorToBeDeleted = await GetById(entity.Id);
 

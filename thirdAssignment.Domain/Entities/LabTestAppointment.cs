@@ -6,11 +6,7 @@ namespace thirdAssignment.Domain.Entities
 {
     public class LabTestAppointment : ConsultingRoomStateBaseEntity
     {
-        public LabTestAppointment()
-        {
-            Name = $" test's for the appointment {AppointmetId}";
-            IsNotPending = false;
-        }
+
         public Guid AppointmetId { get; set; }
         public Guid LabTesttId { get; set; }
         public Guid DoctorsId { get; set; }

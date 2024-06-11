@@ -206,11 +206,8 @@ namespace thirdAssignment.Presentation.Controllers
 
                 if (!result.IsSuccess)
                 {
-                    Result<LabTestModel> resultIner = new();
-
-                    resultIner = await _labTestService.GetById(id);
                     ViewBag.Message = result.Message;
-                    return View(resultIner.Data);
+                    return RedirectToAction(nameof(Index));
                 }
                 return RedirectToAction(nameof(Index));
 

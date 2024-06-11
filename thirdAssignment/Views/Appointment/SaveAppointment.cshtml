@@ -1,0 +1,53 @@
+﻿@model thirdAssignment.Presentation.Models.SaveAppointment
+
+@if (ViewBag.Message is not null)
+{
+    <p class="alert-danger d-block text-center">@ViewBag.message</p>
+}
+
+<div class="row">
+    <div class="col-8 offset-2">
+        <div class=" bg-dark text-light">
+            <h1 class="text-center"> Schedule  a new appointment </h1>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <section>
+                    <form method="post" asp-controller="Appointment" asp-action="SaveAppointment">
+
+						<div class="mb-3">
+                            <label for="PatientId" class="form-label"> Patient </label>
+                            <select name="PatientId" id="PatientId" class="form-select" asp-items="Model.AppointmentList[1]"> </select>
+						</div>
+
+						<div class="mb-3">
+                            <label for="DoctorId" class="form-label"> Doctor </label>
+                            <select name="DoctorId" id="DoctorId" class="form-select" asp-items="Model.AppointmentList[2]"> </select>
+						</div>
+
+						<div class="mb-3">
+							<label for="AppointmentDate" class="form-label"> Date </label>
+							<input type="date" name="AppointmentDate" class="form-control" />
+						</div>
+
+                        @Html.TextBoxFor(m => m.AppointmentTime, new { @class = "form-control timepicker", type = "time", value = Model.AppointmentTime.ToString("HH\\:mm") })
+
+                        <div class="mb-3">
+                            <label for="AppointmentCause" class="form-label"> Cause </label>
+                            <input type="text" name="AppointmentCause" class="form-control" />
+                        </div>
+
+                        <input type="type" name="AppointmentStateId" value="1" class="visually-hidden" />
+
+                        <div class="p-2">
+                            <button asp-controller="Appointment" asp-action="SaveAppointment" class="btn btn-primary  float-end  p-2 "> Save </button>
+                            <a asp-controller="Appointment" asp-action="Index" class="btn btn-outline-warning  float-end  p-2  mx-2"> Go Back </a>
+                        </div>
+
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

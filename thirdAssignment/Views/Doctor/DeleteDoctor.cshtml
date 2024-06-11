@@ -1,5 +1,10 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model thirdAssignment.Aplication.Models.DoctorModel
+
+<div>
+    <form method="post" asp-controller="Doctor" asp-action="DeleteDoctor">
+        <input type="hidden" name="SeriesId" value="@Model.Id" />
+        <h1>Are you sure you want to delete this Doctor?</h1>
+        <button type="submit" class="btn btn-danger float-end p-2">Delete</button>
+        <a asp-controller="Doctor" asp-action="index" class="btn btn-outline-warning float-end p-2 mx-2">Go Back</a>
+    </form>
+</div>
