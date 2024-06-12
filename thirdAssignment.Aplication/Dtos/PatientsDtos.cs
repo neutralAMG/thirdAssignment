@@ -17,7 +17,7 @@ namespace thirdAssignment.Aplication.Dtos
         public DateOnly BirthDate { get; set; }  
     }
 
-    public record SavePatientDto : BasePatientDto
+    public record PatientSaveDto : BasePatientDto
     {
 
         public Guid ConsultingRoomId { get; set; }

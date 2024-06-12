@@ -3,6 +3,10 @@
 {
     <p class="alert-danger d-block text-center">@ViewBag.message</p>
 }
+@if (ViewBag.UserCreated is not null)
+{
+    <p class=" alert alert-success d-block text-center" role="alert">@ViewBag.UserCreated</p>
+}
 <div class="row">
     <div class="col-8 offset-2">
         <div class=" bg-dark text-light">

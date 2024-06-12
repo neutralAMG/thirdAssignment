@@ -34,8 +34,16 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
             modelBuilder.Entity<User>(u =>
             {
                 u.HasKey(u => u.Id);
-                u.HasOne(u => u.ConsultingRoom);
-                u.HasOne(U => U.UserRol);
+
+                u.HasOne(u => u.ConsultingRoom).WithMany().HasForeignKey(p => p.ConsultingRoomId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
+
+                u.HasOne(U => U.UserRol).WithMany()
+                .HasForeignKey(u => u.RolId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
+
                 u.Property(u => u.Name).IsRequired();
                 u.Property(u => u.Id).IsRequired();
                 u.Property(u => u.ConsultingRoomId).IsRequired();
@@ -51,6 +59,33 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
             modelBuilder.Entity<ConsultingRoom>(c =>
             {
                 c.HasKey(c => c.Id);
+
+                c.HasMany(c => c.users)
+                .WithOne(u => u.ConsultingRoom)
+                .HasForeignKey(c => c.ConsultingRoomId).HasConstraintName("Fk_For_user_ConsultingRoomId")
+                .IsRequired().OnDelete(DeleteBehavior.NoAction);
+
+                c.HasMany(c => c.labTests)
+               .WithOne(u => u.ConsultingRoom)
+               .HasForeignKey(c => c.ConsultingRoomId).HasConstraintName("Fk_For_labTest_ConsultingRoomId")
+               .IsRequired().OnDelete(DeleteBehavior.NoAction);
+
+                c.HasMany(c => c.patients)
+               .WithOne(u => u.ConsultingRoom)
+               .HasForeignKey(c => c.ConsultingRoomId).HasConstraintName("Fk_For_patients_ConsultingRoomId")
+               .IsRequired().OnDelete(DeleteBehavior.NoAction);
+
+                c.HasMany(c => c.doctors)
+               .WithOne(u => u.ConsultingRoom)
+               .HasForeignKey(c => c.ConsultingRoomId).HasConstraintName("Fk_For_doctors_ConsultingRoomId")
+               .IsRequired().OnDelete(DeleteBehavior.NoAction);
+
+                c.HasMany(c => c.appointments)
+               .WithOne(u => u.ConsultingRoom)
+               .HasForeignKey(c => c.ConsultingRoomId).HasConstraintName("Fk_For_appointments_ConsultingRoomId")
+               .IsRequired().OnDelete(DeleteBehavior.NoAction);
+
+
                 c.Property(c => c.Name).IsRequired();
 
             });
@@ -60,8 +95,16 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
             modelBuilder.Entity<Patient>(p =>
             {
                 p.HasKey(p => p.Id);
-                p.HasOne(p => p.ConsultingRoom);
-                p.HasMany(p => p.appointments);
+                p.HasOne(p => p.ConsultingRoom).WithMany()
+                .HasForeignKey(p => p.ConsultingRoomId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
+
+                p.HasMany(p => p.appointments)
+                .WithOne(a => a.Patient)
+                .HasForeignKey(a => a.PatientId).IsRequired()
+               .OnDelete(DeleteBehavior.Cascade);
+
                 p.Property(p => p.Name).IsRequired();
                 p.Property(p => p.Id).IsRequired();
                 p.Property(p => p.ConsultingRoomId).IsRequired();
@@ -88,7 +131,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
                 d.HasOne(d => d.ConsultingRoom).WithMany(cr => cr.doctors)
                 .HasForeignKey(a => a.ConsultingRoomId).OnDelete(DeleteBehavior.Cascade);
                 d.HasMany(d => d.appointments).WithOne(cr => cr.Doctor)
-                .HasForeignKey(a => a.DoctorId).OnDelete(DeleteBehavior.NoAction); 
+                .HasForeignKey(a => a.DoctorId).OnDelete(DeleteBehavior.NoAction);
                 d.Property(d => d.Name).IsRequired();
                 d.Property(d => d.Id).IsRequired();
                 d.Property(d => d.ConsultingRoomId).IsRequired();
@@ -105,10 +148,15 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
             {
 
                 l.HasKey(l => l.Id);
-                l.HasOne(l => l.ConsultingRoom);
-                l.HasMany(l => l.labTestAppointments).WithOne(l => l.LabTest)
-                .HasForeignKey(l => l.LabTesttId)
+                l.HasOne(l => l.ConsultingRoom).WithMany()
+                .HasForeignKey(p => p.ConsultingRoomId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
+
+                l.HasMany(l => l.labTestAppointments).WithOne(l => l.LabTest)
+                .HasForeignKey(l => l.LabTesttId).IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
                 l.Property(l => l.Name).IsRequired();
                 l.Property(l => l.Id).IsRequired();
                 l.Property(l => l.Description);
@@ -123,31 +171,22 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
 
                 l.HasKey(l => l.Id);
                 l.HasOne(l => l.ConsultingRoom).WithMany()
-                .HasForeignKey(l => l.ConsultingRoomId)
+                .HasForeignKey(l => l.ConsultingRoomId).IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
 
                 l.HasOne(l => l.Appointment).WithMany(a => a.labTestAppointments)
-                .HasForeignKey(l => l.AppointmetId)
-                .OnDelete(DeleteBehavior.NoAction); 
-
-                l.HasOne(l => l.Patient).WithMany()
-                .HasForeignKey(l => l.PatientId)
-                .OnDelete(DeleteBehavior.NoAction); 
-
-                l.HasOne(l => l.Doctor).WithMany()
-                .HasForeignKey(l => l.DoctorsId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(l => l.AppointmetId).IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
                 l.HasOne(l => l.LabTest)
-                .WithMany( l => l.labTestAppointments )
-                .HasForeignKey(l => l.LabTesttId)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .WithMany(l => l.labTestAppointments)
+                .HasForeignKey(l => l.LabTesttId).IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
-                l.Property(l => l.AppointmetId).IsRequired();
-                l.Property(l => l.LabTesttId).IsRequired();
-                l.Property(l => l.DoctorsId).IsRequired();
                 l.Property(l => l.Id).IsRequired();
                 l.Property(l => l.ConsultingRoomId).IsRequired();
+                l.Property(l => l.AppointmetId).IsRequired();
+                l.Property(l => l.LabTesttId).IsRequired();
                 l.Property(l => l.IsNotPending).IsRequired();
                 l.Property(l => l.TestResult).HasMaxLength(150);
 
@@ -158,13 +197,33 @@ namespace thirdAssignment.Infrastructure.Persistence.Context
             modelBuilder.Entity<Appointment>(a =>
             {
                 a.HasKey(l => l.Id);
-                a.HasOne(l => l.ConsultingRoom);
-                a.HasOne(l => l.Doctor);
-                a.HasOne(l => l.Patient).WithMany(p => p.appointments)
-                .HasForeignKey(a => a.PatientId)
-                .OnDelete(DeleteBehavior.Restrict);
-                a.HasMany(l => l.labTestAppointments);
-                a.HasOne(l => l.AppointmentState);
+
+
+                a.HasOne(l => l.ConsultingRoom)
+                .WithMany()
+                .HasForeignKey(l => l.ConsultingRoomId).IsRequired()
+                 .OnDelete(DeleteBehavior.NoAction);
+
+                a.HasOne(l => l.Doctor)
+                    .WithMany()
+                    .HasForeignKey(l => l.DoctorId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                a.HasOne(l => l.Patient)
+                    .WithMany(p => p.appointments)
+                    .HasForeignKey(a => a.PatientId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                a.HasMany(l => l.labTestAppointments)
+                    .WithOne(a => a.Appointment)
+                    .HasForeignKey(l => l.AppointmetId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                a.HasOne(l => l.AppointmentState)
+                    .WithMany(a => a.appointments)
+                    .HasForeignKey(l => l.AppointmentStateId).IsRequired()
+                    .OnDelete(DeleteBehavior.NoAction);
+
                 a.Property(l => l.AppointmentDate).IsRequired().HasConversion(v => v.ToDateTime(TimeOnly.MinValue), v => DateOnly.FromDateTime(v));
                 a.Property(l => l.AppointmentCause).IsRequired();
                 a.Property(l => l.AppointmentTime).IsRequired().HasConversion(v => v.ToTimeSpan(), v => new TimeOnly(v.Ticks));

@@ -17,13 +17,9 @@ builder.Services.AddAplicationLayer();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddTransient<UserValidations>();
+builder.Services.AddTransient<UserValidations, UserValidations>();
+
 builder.Services.AddTransient<GenerateSelectList>();
-
-
-
-
-
 
 var app = builder.Build();
 

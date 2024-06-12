@@ -14,7 +14,7 @@
 
                 <section>
                     <form method="post" asp-controller="User" asp-action="SaveUser">
-
+                        <input type="type" name="ConsultingRoomName" value="To be assingd" class="visually-hidden" />
                         <div class="mb-3">
                             <label for="Name" class="form-label"> Name</label>
                             <input type="text" name="Name" class="form-control" />
@@ -35,12 +35,12 @@
 
                         <div class="mb-3">
                             <label for="Password" class="form-label"> Password </label>
-                            <input type="text" name="Password" class="form-control" />
+                            <input type="text" name="Password" required="the password is a requierd field" class="form-control" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="PasswordConfirm" class="form-label"> Password Confirm </label>
-                            <input type="text" name="PasswordConfirm" class="form-control" />
+                            <label for="ConfirmPassword" class="form-label"> Password Confirm </label>
+                            <input type="text" name="ConfirmPassword" required="the confirm password is a requierd field" class="form-control" />
                         </div>
                   
                         <div class="mb-3">

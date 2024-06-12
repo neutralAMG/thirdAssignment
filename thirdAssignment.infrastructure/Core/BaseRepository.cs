@@ -21,31 +21,26 @@ namespace thirdAssignment.Infrastructure.Persistence.Core
           return await Task.FromResult( _Entities.Any(filter));
         }
          
-        //public virtual async Task<List<Tentity>> GetAll(Func<Tentity, bool> GetEntty)
-        //{
-        //    return await Task.FromResult(_Entities.Where(GetEntty).ToList());
-        //}
-        //public virtual async Task<List<Tentity>> GetAll()
-        //{
-        //    return await _Entities.ToListAsync();
-        //}
 
         public virtual async Task<Tentity> GetById(Guid id)
         {
             return await _Entities.FindAsync(id);
         }
 
-        public virtual Task Save(Tentity entity)
+        public virtual async Task<Tentity> Save(Tentity entity)
         {
-            _Entities.AddAsync(entity);
-            return  _AppContext.SaveChangesAsync();
+            await _Entities.AddAsync(entity);
+            await  _AppContext.SaveChangesAsync();
+            return entity;
             
         }
 
-        public virtual Task Update(Tentity entity)
+        public virtual async Task<Tentity> Update(Tentity entity)
         {
-            _Entities.Update(entity);
-            return _AppContext.SaveChangesAsync();
+            _AppContext.Attach(entity);
+            _AppContext.Entry(entity).State = EntityState.Modified;
+            await _AppContext.SaveChangesAsync();
+            return entity;
         }        
         
         public virtual Task Delete(Tentity entity)

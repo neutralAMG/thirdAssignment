@@ -31,7 +31,7 @@
 							<input type="date" name="AppointmentDate" class="form-control" />
 						</div>
 
-                        @Html.TextBoxFor(m => m.AppointmentTime, new { @class = "form-control timepicker", type = "time", value = Model.AppointmentTime.ToString("HH\\:mm") })
+                        @Html.TextBoxFor(m => m.AppointmentTime, new { @class = "form-control timepicker", type = "time", value = Model.AppointmentTime.ToString("HH\\:mm") } )
 
                         <div class="mb-3">
                             <label for="AppointmentCause" class="form-label"> Cause </label>

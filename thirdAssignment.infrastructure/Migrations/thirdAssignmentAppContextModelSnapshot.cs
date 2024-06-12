@@ -44,7 +44,13 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("ConsultingRoomId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ConsultingRoomId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DoctorId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -60,11 +66,15 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId");
 
+                    b.HasIndex("ConsultingRoomId1");
+
                     b.HasIndex("DoctorId");
+
+                    b.HasIndex("DoctorId1");
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.AppointmentState", b =>
@@ -81,7 +91,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppointmentStates", (string)null);
+                    b.ToTable("AppointmentStates");
 
                     b.HasData(
                         new
@@ -113,7 +123,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ConsultingRooms", (string)null);
+                    b.ToTable("ConsultingRooms");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.Doctor", b =>
@@ -152,7 +162,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId");
 
-                    b.ToTable("Doctors", (string)null);
+                    b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.LabTest", b =>
@@ -162,6 +172,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ConsultingRoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ConsultingRoomId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -175,7 +188,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId");
 
-                    b.ToTable("LabTests", (string)null);
+                    b.HasIndex("ConsultingRoomId1");
+
+                    b.ToTable("LabTests");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.LabTestAppointment", b =>
@@ -193,9 +208,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("ConsultingRoomId1")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DoctorsId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsNotPending")
                         .HasColumnType("bit");
 
@@ -205,9 +217,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TestResult")
                         .IsRequired()
@@ -222,13 +231,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId1");
 
-                    b.HasIndex("DoctorsId");
-
                     b.HasIndex("LabTesttId");
 
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("LabtestAppointments", (string)null);
+                    b.ToTable("LabtestAppointments");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.Patient", b =>
@@ -249,6 +254,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ConsultingRoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ConsultingRoomId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("EMailAddress")
@@ -280,7 +288,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ConsultingRoomId");
 
-                    b.ToTable("Patients", (string)null);
+                    b.HasIndex("ConsultingRoomId1");
+
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.User", b =>
@@ -319,13 +329,18 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserRolId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ConsultingRoomId");
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Users", (string)null);
+                    b.HasIndex("UserRolId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.UserRol", b =>
@@ -342,7 +357,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRols", (string)null);
+                    b.ToTable("UserRols");
 
                     b.HasData(
                         new
@@ -362,25 +377,34 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                     b.HasOne("thirdAssignment.Domain.Entities.AppointmentState", "AppointmentState")
                         .WithMany("appointments")
                         .HasForeignKey("AppointmentStateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", "ConsultingRoom")
-                        .WithMany("appointments")
+                        .WithMany()
                         .HasForeignKey("ConsultingRoomId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("Fk_For_appointments_ConsultingRoomId");
+
+                    b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", null)
+                        .WithMany("appointments")
+                        .HasForeignKey("ConsultingRoomId1");
+
+                    b.HasOne("thirdAssignment.Domain.Entities.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("thirdAssignment.Domain.Entities.Doctor", "Doctor")
+                    b.HasOne("thirdAssignment.Domain.Entities.Doctor", null)
                         .WithMany("appointments")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("DoctorId1");
 
                     b.HasOne("thirdAssignment.Domain.Entities.Patient", "Patient")
                         .WithMany("appointments")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppointmentState");
@@ -398,7 +422,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                         .WithMany("doctors")
                         .HasForeignKey("ConsultingRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("Fk_For_doctors_ConsultingRoomId");
 
                     b.Navigation("ConsultingRoom");
                 });
@@ -406,10 +431,15 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("thirdAssignment.Domain.Entities.LabTest", b =>
                 {
                     b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", "ConsultingRoom")
-                        .WithMany("labTests")
+                        .WithMany()
                         .HasForeignKey("ConsultingRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("Fk_For_labTest_ConsultingRoomId");
+
+                    b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", null)
+                        .WithMany("labTests")
+                        .HasForeignKey("ConsultingRoomId1");
 
                     b.Navigation("ConsultingRoom");
                 });
@@ -419,7 +449,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                     b.HasOne("thirdAssignment.Domain.Entities.Appointment", "Appointment")
                         .WithMany("labTestAppointments")
                         .HasForeignKey("AppointmetId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", "ConsultingRoom")
@@ -432,42 +462,31 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                         .WithMany("labTestAppointments")
                         .HasForeignKey("ConsultingRoomId1");
 
-                    b.HasOne("thirdAssignment.Domain.Entities.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorsId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("thirdAssignment.Domain.Entities.LabTest", "LabTest")
                         .WithMany("labTestAppointments")
                         .HasForeignKey("LabTesttId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("thirdAssignment.Domain.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Appointment");
 
                     b.Navigation("ConsultingRoom");
 
-                    b.Navigation("Doctor");
-
                     b.Navigation("LabTest");
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("thirdAssignment.Domain.Entities.Patient", b =>
                 {
                     b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", "ConsultingRoom")
-                        .WithMany("patients")
+                        .WithMany()
                         .HasForeignKey("ConsultingRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("Fk_For_patients_ConsultingRoomId");
+
+                    b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", null)
+                        .WithMany("patients")
+                        .HasForeignKey("ConsultingRoomId1");
 
                     b.Navigation("ConsultingRoom");
                 });
@@ -477,14 +496,19 @@ namespace thirdAssignment.Infrastructure.Persistence.Migrations
                     b.HasOne("thirdAssignment.Domain.Entities.ConsultingRoom", "ConsultingRoom")
                         .WithMany("users")
                         .HasForeignKey("ConsultingRoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("Fk_For_user_ConsultingRoomId");
 
                     b.HasOne("thirdAssignment.Domain.Entities.UserRol", "UserRol")
-                        .WithMany("users")
+                        .WithMany()
                         .HasForeignKey("RolId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("thirdAssignment.Domain.Entities.UserRol", null)
+                        .WithMany("users")
+                        .HasForeignKey("UserRolId");
 
                     b.Navigation("ConsultingRoom");
 

@@ -18,11 +18,12 @@
                 <section>
                     @using (Html.BeginForm("ConsultAnAppointmet", "Appointment", FormMethod.Post))
                     {
-                        @Html.HiddenFor(m => m.AppointmentModel.Id)  
+                //        @Html.HiddenFor(m => m.AppointmentModel.Id)  
                         @Html.HiddenFor(m => m.AppointmentModel.Patient)  
                         @Html.HiddenFor(m => m.AppointmentModel.Doctor)  
                         <input type hidden name="DoctorId" value="@Model.AppointmentModel.Doctor.Id"  />
                         <input type hidden name="PatientId" value="@Model.AppointmentModel.Patient.Id" />
+                        <input type hidden name="Id" value="@Model.AppointmentModel.Id" />
 
                     @for (int i = 0; i < Model.Checkboxes.Count; i++)
                         {

@@ -45,11 +45,11 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             
         }
 
-        public override async Task Save(Doctor entity)
+        public override async Task<Doctor> Save(Doctor entity)
         {
             try
             {
-                await base.Save(entity);
+               return await base.Save(entity);
 
             }
             catch 
@@ -59,7 +59,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
           
         }
 
-        public override async Task Update(Doctor entity)
+        public override async Task<Doctor> Update(Doctor entity)
         {
 
             try
@@ -81,7 +81,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 DoctorToBeUpdated.ImgPath = entity.ImgPath;
 
 
-                await base.Update(DoctorToBeUpdated);
+               return await base.Update(DoctorToBeUpdated);
             }
             catch 
             {

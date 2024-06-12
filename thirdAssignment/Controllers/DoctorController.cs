@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using thirdAssignment.Aplication.Core;
 using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
-using thirdAssignment.Aplication.Models;
-using thirdAssignment.Presentation.Utils;
-using thirdAssignment.Presentation.Utils.SessionHandler;
+using thirdAssignment.Aplication.Models.Doctor;
+using thirdAssignment.Aplication.Models.Patient;
+using thirdAssignment.Aplication.Services;
 using thirdAssignment.Presentation.Utils.UserValidations;
 
 namespace thirdAssignment.Presentation.Controllers
@@ -26,13 +25,14 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> Index()
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
             Result<List<DoctorModel>> result = new();
             try
             {
-                var currentUser = HttpContext.Session.Get<UserModel>("user");
 
-                result = await _doctorService.GetAll(currentUser.ConsultingRoom.Id);
+
+                result = await _doctorService.GetAll();
 
                 if (!result.IsSuccess)
                 {
@@ -55,19 +55,21 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> SaveDoctor()
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
-            return View();
+            return View(new DoctorSaveModel());
         }
 
         // POST: DoctorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveDoctor(SaveDoctorDto saveDto)
+        public async Task<IActionResult> SaveDoctor(DoctorSaveModel saveDto)
         {
             //IFormFile img
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
-            Result<DoctorModel> result = new();
+            Result<DoctorSaveModel> result = new();
             try
             {
 
@@ -87,15 +89,25 @@ namespace thirdAssignment.Presentation.Controllers
                 if (!ModelState.IsValid)
                 {
                     ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
-                    return View();
+                    return View(new DoctorSaveModel());
                 }
-                if (saveDto.ImgPath.IsNullOrEmpty()){
-                    ViewBag.message = "the Imge field is requierd";
-                    return View();
-                }
-                saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
+                //if (saveDto.ImgPath.IsNullOrEmpty()){
+                //    ViewBag.message = "the Imge field is requierd";
+                //    return View();
+                //}
                 
-                result = await _doctorService.Save(saveDto);
+                 result = await _doctorService.Save(saveDto);
+
+                 DoctorSaveModel savedDoctor = result.Data;
+
+                  if (savedDoctor != null && savedDoctor.Id != null) { 
+
+                    savedDoctor.ImgPath = UploadFile(saveDto.File, savedDoctor.Id);
+
+                    result =  await _doctorService.Update(savedDoctor);
+                   }
+
+
 
                 if (!result.IsSuccess)
                 {
@@ -111,11 +123,54 @@ namespace thirdAssignment.Presentation.Controllers
             }
         }
 
-        // GET: DoctorController/Edit/5
-        public async Task<IActionResult> EditDoctor(Guid id)
+		private string UploadFile(IFormFile filePath, Guid id, bool editmode = false, string ImgUrl = "")
+		{
+			if (editmode && filePath == null)
+			{
+				return ImgUrl;
+			}
+			//Get directory path
+			string basePath = $"/Images/Doctors/{id}";
+			string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{basePath}");
+
+			//create folder if not exits
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
+
+			// get file path
+			Guid guid = Guid.NewGuid();
+
+			FileInfo fileInfo = new(filePath.FileName);
+
+			string filename = guid + fileInfo.Extension;
+
+			string fileNameWithPath = Path.Combine(path, filename);
+
+			using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+			{
+				filePath.CopyTo(stream);
+			}
+
+			if (editmode)
+			{
+				string[] oldImgUrlPort = ImgUrl.Split("/");
+				string oldImageName = oldImgUrlPort[^1];
+				string CompleteOldPath = Path.Combine(path, oldImageName);
+				if (System.IO.File.Exists(CompleteOldPath))
+				{
+					System.IO.File.Delete(CompleteOldPath);
+				}
+			}
+			return $"{basePath}/{filename}";
+		}
+		// GET: DoctorController/Edit/5
+		public async Task<IActionResult> EditDoctor(Guid id)
         {
 
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
             Result<DoctorModel> result = new();
             try
@@ -143,29 +198,39 @@ namespace thirdAssignment.Presentation.Controllers
         // POST: DoctorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditDoctor(Guid id, UpdateDoctorDto updateDto)
+        public async Task<IActionResult> EditDoctor(Guid id, DoctorSaveModel updateDto)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
-            Result<DoctorModel> result = new();
+            Result<DoctorSaveModel> result = new();
             try
             {
+              
 
                 if (!ModelState.IsValid)
                 {
-                    
-                    result = await _doctorService.GetById(id);
-                    ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
-                    return View(result.Data);
-                }
-                result = await _doctorService.Update(updateDto);
-
-                if (!result.IsSuccess)
-                {
+                   ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
                     Result<DoctorModel> resultIner = new();
-
                     resultIner = await _doctorService.GetById(id);
+                    return View(resultIner.Data);
+				}
+               
+
+				DoctorModel doctor = _doctorService.GetById(updateDto.Id).Result.Data;
+
+
+				updateDto.ImgPath = UploadFile(updateDto.File, doctor.Id, true, doctor.ImgPath);
+
+				
+ result = await _doctorService.Update(updateDto);
+
+
+				if (!result.IsSuccess)
+                { 
                     ViewBag.Message = result.Message;
+                    Result<DoctorModel> resultIner = new();
+                    resultIner = await _doctorService.GetById(updateDto.Id);
                     return View(resultIner.Data);
                 }
                 return RedirectToAction(nameof(Index));
@@ -180,6 +245,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> DeleteDoctor(Guid id)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
             Result<DoctorModel> result = new();
             try
@@ -209,6 +275,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> DeleteDoctor(Guid id, IFormCollection collection)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
             Result<DoctorModel> result = new();
             try
@@ -220,7 +287,24 @@ namespace thirdAssignment.Presentation.Controllers
                     ViewBag.Message = result.Message;
                     return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+
+				string basePath = $"/Images/Doctors/{id}";
+				string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot{basePath}");
+				if (Directory.Exists(path))
+				{
+					DirectoryInfo directoryInfo = new DirectoryInfo(path);
+					foreach (FileInfo file in directoryInfo.GetFiles())
+					{
+						file.Delete();
+					}
+
+					foreach (DirectoryInfo folder in directoryInfo.GetDirectories())
+					{
+						folder.Delete(true);
+					}
+				}
+
+				return RedirectToAction(nameof(Index));
 
             }
             catch

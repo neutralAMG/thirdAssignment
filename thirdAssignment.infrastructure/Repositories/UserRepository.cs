@@ -39,17 +39,13 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public override async Task Save(User entity)
+        public override async Task<User> Save(User entity)
         {
             try
             {
-                if (await Exits(u => u.UserName == entity.UserName)) return;
+                if (await Exits(u => u.UserName == entity.UserName)) return null;
 
-                if (await Exits(u => u.LastName == entity.LastName)) return;
-
-                
-                await base.Save(entity);
-                 await _appContext.SaveChangesAsync();
+               return  await base.Save(entity);
             }
             catch 
             {
@@ -59,14 +55,11 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public async Task Register(User entity)
+        public async Task<bool> Register(User entity)
         {
             try
             {
-                if (await Exits(u => u.UserName == entity.UserName)) return;
-
-                if (await Exits(u => u.LastName == entity.LastName)) return;
-
+                if (await Exits(u => u.UserName == entity.UserName)) return false;
 
                 ConsultingRoom consultingRoom = new ConsultingRoom { Name = entity.ConsultingRoomName };
 
@@ -79,6 +72,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 await base.Save(entity);
 
                 await _appContext.SaveChangesAsync();
+
+                return true;
             }
             catch 
             {
@@ -88,12 +83,12 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public override async Task Update(User entity)
+        public override async Task<User> Update(User entity)
         {
 
             try
             {
-                if (await Exits(u => u.UserName == entity.UserName)) return;
+             //   if (await Exits(u => u.UserName == entity.UserName)) return null;
 
                 User UserToBeUpdated = await GetById(entity.Id);
 
@@ -107,7 +102,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 UserToBeUpdated.UserName = entity.UserName;
 
-                await base.Update(UserToBeUpdated);
+                return await base.Update(UserToBeUpdated);
             }
             catch 
             {

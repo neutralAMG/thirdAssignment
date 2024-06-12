@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using thirdAssignment.Aplication.Dtos;
-using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Models.Patient;
+
+
 
 namespace thirdAssignment.Presentation.Models
 {

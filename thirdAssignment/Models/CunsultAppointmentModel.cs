@@ -1,4 +1,4 @@
-﻿using thirdAssignment.Aplication.Models;
+﻿using thirdAssignment.Aplication.Models.Appointment;
 
 namespace thirdAssignment.Presentation.Models
 {

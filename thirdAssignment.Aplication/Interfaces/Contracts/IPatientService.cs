@@ -1,12 +1,12 @@
 ﻿
 using thirdAssignment.Aplication.Core;
 using thirdAssignment.Aplication.Dtos;
-using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Models.Patient;
 using thirdAssignment.Domain.Entities;
 
 namespace thirdAssignment.Aplication.Interfaces.Contracts
 {
-    public interface IPatientService : IBaseService< SavePatientDto, UpdatePatientDto, PatientModel, Patient>, IGetWithCunsultingRoomIdInService<PatientModel>
+    public interface IPatientService : IBaseService<PatienSaveModel, PatientModel, Patient>, IGetWithCunsultingRoomIdInService<PatientModel>
     {
     }
 }

@@ -21,35 +21,37 @@
                         <input type="type" name="ConsultingRoomId" value="@Model.userToEdit.ConsultingRoom.Id" class="visually-hidden" />
                         <input type="type" name="ConsultingRoomName" value="@Model.userToEdit.ConsultingRoomName" class="visually-hidden" />
 
+   
+
                         <div class="mb-3">
                             <label for="Name" class="form-label"> Name</label>
-                            <input type="text" name="Name" value="@Model.userToEdit.Name" class="form-control" />
+                            <input type="text" name="Name" required value="@Model.userToEdit.Name" class="form-control" />
                         </div>
 
                         <div class="mb-3">
                             <label for="LastName" class="form-label"> Last Name</label>
-                            <input type="text" name="LastName" value="@Model.userToEdit.LastName" class="form-control" />
+                            <input type="text" name="LastName" required value="@Model.userToEdit.LastName" class="form-control" />
                         </div>
 
                         <div class="mb-3">
                             <label for="UserName" class="form-label"> User Name </label>
-                            <input type="text" name="UserName" value="@Model.userToEdit.UserName" class="form-control" />
+                            <input type="text" name="UserName" required value="@Model.userToEdit.UserName" class="form-control" />
                         </div>
 
                         <div class="mb-3">
                             <label for="EMailAddress" class="form-label"> EMail Address </label>
-                            <input type="text" name="EMailAddress" value="@Model.userToEdit.EMailAddress" class="form-control" />
+                            <input type="text" name="EMailAddress" required value="@Model.userToEdit.EMailAddress" class="form-control" />
                         </div>
 
                         <div class="mb-3">
                             <label for="Password" class="form-label"> Password </label>
-                            <input type="text" name="Password" class="form-control" />
+                            <input type="text" name="Password" required class="form-control" />
                         </div>
 
 
                         <div class="mb-3">
-                            <label for="ConfirmPass" class="form-label"> Confirm Password </label>
-                            <input type="text" name="ConfirmPass" class="form-control" />
+                            <label for="ConfirmPassword" class="form-label"> Confirm Password </label>
+                            <input type="text" name="ConfirmPassword" required  class="form-control" />
                          </div>
 
                         <div class="p-2">

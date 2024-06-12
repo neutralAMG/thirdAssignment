@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using thirdAssignment.Aplication.Dtos;
+
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Models.Appointment;
+using thirdAssignment.Aplication.Models.Patient;
+using thirdAssignment.Aplication.Models.User;
 using thirdAssignment.Presentation.Models;
-using thirdAssignment.Presentation.Utils.Enums;
+
 
 namespace thirdAssignment.Presentation.Utils
 {
@@ -172,9 +175,9 @@ namespace thirdAssignment.Presentation.Utils
             return selects;
         }
 
-        public  Dictionary<int, List<SelectListItem>> ApoinmetsLists(Guid id, IPatientService patientService, IDoctorService doctorService)
+        public  Dictionary<int, List<SelectListItem>> ApoinmetsLists( IPatientService patientService, IDoctorService doctorService)
         {
-            List<SelectListItem>? patients = patientService.GetAll(id).Result.Data.Select(p => new SelectListItem
+            List<SelectListItem>? patients = patientService.GetAll().Result.Data.Select(p => new SelectListItem
             {
                 Value = p.Id.ToString(),
                 Text = p.Name,
@@ -183,7 +186,7 @@ namespace thirdAssignment.Presentation.Utils
              patients.Add(new SelectListItem { Value = null, Selected = true, Text = "Select a patient" });
 
 
-            List<SelectListItem>? Doctors = doctorService.GetAll(id).Result.Data.Select(p => new SelectListItem
+            List<SelectListItem>? Doctors = doctorService.GetAll().Result.Data.Select(p => new SelectListItem
             {
                 Value = p.Id.ToString(),
                 Text = p.Name,
@@ -199,9 +202,9 @@ namespace thirdAssignment.Presentation.Utils
 
             return selects;
         }
-        public List<CheckBoxOption> GenereteListOfLabTest(Guid id, ILabTestService labTestService)
+        public List<CheckBoxOption> GenereteListOfLabTest(ILabTestService labTestService)
         {
-            List<CheckBoxOption>? AllLabTest = labTestService.GetAll(id).Result.Data.Select(l => new CheckBoxOption
+            List<CheckBoxOption>? AllLabTest = labTestService.GetAll().Result.Data.Select(l => new CheckBoxOption
             {
                Id = l.Id.ToString(),
                Name = l.Name,

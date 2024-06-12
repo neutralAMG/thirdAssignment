@@ -4,6 +4,7 @@ using thirdAssignment.Aplication.Services;
 using thirdAssignment.Aplication.Utils.PasswordHasher;
 
 
+
 namespace thirdAssignment.Aplication
 {
     public static class ServiceRegistration  

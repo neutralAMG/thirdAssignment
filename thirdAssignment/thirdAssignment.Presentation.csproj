@@ -21,4 +21,8 @@
     <ProjectReference Include="..\thirdAssignment.infrastructure\thirdAssignment.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\Doctors\" />
+  </ItemGroup>
+
 </Project>

@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
-using thirdAssignment.Aplication.Models;
-using thirdAssignment.Aplication.Services;
+using thirdAssignment.Aplication.Models.Appointment;
 using thirdAssignment.Presentation.Models;
 using thirdAssignment.Presentation.Utils;
-using thirdAssignment.Presentation.Utils.SessionHandler;
+using thirdAssignment.Aplication.Utils.SessionHandler;
 using thirdAssignment.Presentation.Utils.UserValidations;
+using thirdAssignment.Aplication.Models.User;
+using thirdAssignment.Aplication.Models.LabTestAppointment;
 
 namespace thirdAssignment.Presentation.Controllers
 {
@@ -36,13 +36,14 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> Index()
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
             Result<List<AppointmentModel>> result = new();
             try
             {
-                var currentUser = HttpContext.Session.Get<UserModel>("user");
 
-                result = await _appointmentService.GetAll(currentUser.ConsultingRoom.Id);
+
+                result = await _appointmentService.GetAll();
 
                 if (!result.IsSuccess)
                 {
@@ -63,6 +64,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> AppointmentDetails(Guid id)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
 
             Result<AppointmentModel> result = new();
@@ -90,6 +92,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> ConsultAnAppointmet(Guid id)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
 
             Result<AppointmentModel> result = new();
@@ -102,7 +105,7 @@ namespace thirdAssignment.Presentation.Controllers
 
                 }
                 var currentUser = HttpContext.Session.Get<UserModel>("user");
-                List<CheckBoxOption> Checkboxes = _generateSelectList.GenereteListOfLabTest(currentUser.ConsultingRoom.Id, _labTestService);
+                List<CheckBoxOption> Checkboxes = _generateSelectList.GenereteListOfLabTest( _labTestService);
 
                 CunsultAppointmentModel cunsultAppointment = new CunsultAppointmentModel { Checkboxes = Checkboxes, AppointmentModel = result.Data };
 
@@ -120,47 +123,59 @@ namespace thirdAssignment.Presentation.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         // GET: AppointmentController/Details/5
-        public async Task<IActionResult> ConsultAnAppointmet(Guid id, CunsultAppointmentModel cunsultAppointment, SaveAppointmentsDto saveDto)
+        public async Task<IActionResult> ConsultAnAppointmet(Guid id, CunsultAppointmentModel cunsultAppointment, AppointmentSaveModel saveDto)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
             try
             {
 
-                Result<LabTestAppointmentModel> result = new();
+                Result<LabTestAppointmentSaveModel> result = new();
 
-                var currentUser = HttpContext.Session.Get<UserModel>("user");
-                _appointmentService.Update(new UpdateAppointmentsDto { Id = cunsultAppointment.AppointmentModel.Id, AppointmentStateId = 2 });
+   
 
                 foreach (CheckBoxOption check in cunsultAppointment.Checkboxes)
                 {
                     if (check.IsSelected == true)
                     {
 
-                        result = await _labTestAppointmentService.Save(new SaveLabTestAppointmentDto
+                        result = await _labTestAppointmentService.Save(new LabTestAppointmentSaveModel
                         {
-                            AppointmetId = cunsultAppointment.AppointmentModel.Id,
-                            ConsultingRoomId = currentUser.ConsultingRoom.Id,
-                            DoctorsId = saveDto.DoctorId,
-                            PatientId = saveDto.PatientId,
+                            AppointmetId = saveDto.Id,
                             labTesttId = new Guid(check.Id)
                         });
 
 
                         if (!result.IsSuccess)
-
                         {
                             Result<AppointmentModel> resultIner = new();
                             resultIner = await _appointmentService.GetById(id);
-                            ViewBag.Message = result.Message;
-                            return RedirectToAction("ConsultAnAppointmet");
+                            ViewBag.Message = resultIner.Message;
+							List<CheckBoxOption> Checkboxes = _generateSelectList.GenereteListOfLabTest(_labTestService);
+
+							CunsultAppointmentModel cunsultAppointmet = new CunsultAppointmentModel { Checkboxes = Checkboxes, AppointmentModel = resultIner.Data };
+							return View(cunsultAppointmet);
                         }
 
                     }
 
                 }
 
-                return RedirectToAction("Index");
+                
+              await  _appointmentService.SetToReportResult(saveDto);
+
+				if (!result.IsSuccess)
+				{
+					Result<AppointmentModel> resultIner = new();
+					resultIner = await _appointmentService.GetById(id);
+					ViewBag.Message = resultIner.Message;
+					List<CheckBoxOption> Checkboxes = _generateSelectList.GenereteListOfLabTest(_labTestService);
+
+					CunsultAppointmentModel cunsultAppointmet = new CunsultAppointmentModel { Checkboxes = Checkboxes, AppointmentModel = resultIner.Data };
+					return View(cunsultAppointmet);
+				}
+				return RedirectToAction("Index");
 
             }
             catch
@@ -174,6 +189,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> ReportAppointmentResult(Guid id)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
 
             Result<AppointmentModel> result = new();
@@ -185,7 +201,6 @@ namespace thirdAssignment.Presentation.Controllers
                 {
 
                 }
-                var currentUser = HttpContext.Session.Get<UserModel>("user");
 
                 return View(result.Data.labTestAppointments);
 
@@ -199,18 +214,19 @@ namespace thirdAssignment.Presentation.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         // GET: AppointmentController/Details/5
-        public async Task<IActionResult> ReportAppointmentResult(Guid id, UpdateAppointmentsDto updateAppointmentsDto)
+        public async Task<IActionResult> ReportAppointmentResult(Guid id, AppointmentSaveModel updateAppointmentsDto)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
             try
             {
 
-                Result<AppointmentModel> result = new();
+                Result<AppointmentSaveModel> result = new();
 
-                updateAppointmentsDto.AppointmentStateId = 3;
+              
 
-                result = await _appointmentService.Update(updateAppointmentsDto);
+                result = await _appointmentService.SetToReportComplete(updateAppointmentsDto);
                 if (!result.IsSuccess)
                 {
                     Result<AppointmentModel> resultIner = new();
@@ -259,19 +275,22 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> SaveAppointment()
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
+
             var currentUser = HttpContext.Session.Get<UserModel>("user");
 
-            return View(new SaveAppointment { AppointmentList = _generateSelectList.ApoinmetsLists(currentUser.ConsultingRoom.Id, _patientService, _doctorService) });
+            return View(new SaveAppointment { AppointmentList = _generateSelectList.ApoinmetsLists( _patientService, _doctorService) });
         }
 
         // POST: AppointmentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveAppointment(SaveAppointmentsDto saveDto)
+        public async Task<IActionResult> SaveAppointment(AppointmentSaveModel saveDto)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
-            Result<AppointmentModel> result = new();
+            Result<AppointmentSaveModel> result = new();
             try
             {
                var currentUser = HttpContext.Session.Get<UserModel>("user");
@@ -280,13 +299,8 @@ namespace thirdAssignment.Presentation.Controllers
                 {
                   
                     ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
-                    return View(new SaveAppointment { AppointmentList = _generateSelectList.ApoinmetsLists(currentUser.ConsultingRoom.Id, _patientService, _doctorService) });
+                    return View(new SaveAppointment { AppointmentList = _generateSelectList.ApoinmetsLists( _patientService, _doctorService) });
                 }
-
-               
-
-                saveDto.ConsultingRoomId = currentUser.ConsultingRoom.Id;
-
 
                 result = await _appointmentService.Save(saveDto);
 
@@ -294,7 +308,7 @@ namespace thirdAssignment.Presentation.Controllers
                 {
                     ViewBag.Message = result.Message;
 
-                    return View(new SaveAppointment { AppointmentList = _generateSelectList.ApoinmetsLists(currentUser.ConsultingRoom.Id, _patientService, _doctorService) });
+                    return View(new SaveAppointment { AppointmentList = _generateSelectList.ApoinmetsLists( _patientService, _doctorService) });
                 }
 
                 return RedirectToAction(nameof(Index));

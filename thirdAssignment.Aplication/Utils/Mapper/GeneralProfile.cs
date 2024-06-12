@@ -1,6 +1,12 @@
 ﻿using AutoMapper;
 using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Models.Appointment;
+using thirdAssignment.Aplication.Models.Doctor;
+using thirdAssignment.Aplication.Models.LabTest;
+using thirdAssignment.Aplication.Models.LabTestAppointment;
+using thirdAssignment.Aplication.Models.Patient;
+using thirdAssignment.Aplication.Models.User;
 using thirdAssignment.Domain.Entities;
 
 
@@ -39,11 +45,11 @@ namespace thirdAssignment.Aplication.Utils.Mapper
                 .ForMember(dest => dest.RolId, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoomId, opt => opt.Ignore());
 
-            CreateMap<User, SaveUserDto>()
+            CreateMap<User, UserSaveModel>()
+                .ForMember(dest => dest.ConfirmPassword, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore())
-                .ForMember(dest => dest.UserRol, opt => opt.Ignore())
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
+                .ForMember(dest => dest.UserRol, opt => opt.Ignore());
 
 
             CreateMap<User, UpdateUserDto>()
@@ -70,10 +76,10 @@ namespace thirdAssignment.Aplication.Utils.Mapper
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore());
 
 
-            CreateMap<Doctor, SaveDoctorDto>()
+            CreateMap<Doctor, DoctorSaveModel>()
+                .ForMember(dest => dest.File, opt => opt.Ignore() )
                 .ReverseMap()
                 .ForMember(dest => dest.appointments, opt => opt.Ignore())
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore());
 
             CreateMap<Doctor, UpdateDoctorDto>()
@@ -85,17 +91,17 @@ namespace thirdAssignment.Aplication.Utils.Mapper
 
             #region Patient mappings
 
-            CreateMap<Patient, PatientModel>()
+            CreateMap<Patient, Models.Patient.PatientModel>()
                 .ReverseMap()
                 .ForMember(dest => dest.appointments, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoomId, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore());
 
 
-            CreateMap<Patient, SavePatientDto>()
+            CreateMap<Patient, PatienSaveModel>()
+                .ForMember(dest => dest.File, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(dest => dest.appointments, opt => opt.Ignore())
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore());
 
             CreateMap<Patient, UpdatePatientDto>()
@@ -119,9 +125,8 @@ namespace thirdAssignment.Aplication.Utils.Mapper
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoomId, opt => opt.Ignore());
 
-            CreateMap<Appointment, SaveAppointmentsDto>()
+            CreateMap<Appointment, AppointmentSaveModel>()
                 .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore())
                 .ForMember(dest => dest.Doctor, opt => opt.Ignore())
                 .ForMember(dest => dest.Patient, opt => opt.Ignore())
@@ -145,9 +150,8 @@ namespace thirdAssignment.Aplication.Utils.Mapper
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoomId, opt => opt.Ignore());
 
-            CreateMap<LabTest, SaveLabTestDto>()
+            CreateMap<LabTest, LabTestSaveModel>()
                  .ReverseMap()
-                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore());
 
             CreateMap<LabTest, UpdateLabTestDto>()
@@ -158,30 +162,22 @@ namespace thirdAssignment.Aplication.Utils.Mapper
 
             #region Lab test appointments mappings
             CreateMap<LabTestAppointment, LabTestAppointmentModel>()
-                .ForMember(dest => dest.Patient, opt => opt.MapFrom(src => src.Patient))
-                .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
+
                 .ForMember(dest => dest.Appointment, opt => opt.MapFrom(src => src.Appointment))
                 .ForMember(dest => dest.LabTest, opt => opt.MapFrom(src => src.LabTest))
                 .ReverseMap()
-                .ForMember(dest => dest.PatientId, opt => opt.Ignore())
-                .ForMember(dest => dest.DoctorsId, opt => opt.Ignore())
                 .ForMember(dest => dest.AppointmetId, opt => opt.Ignore())
                 .ForMember(dest => dest.LabTesttId, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoomId, opt => opt.Ignore());
 
-            CreateMap<LabTestAppointment, SaveLabTestAppointmentDto>()
+            CreateMap<LabTestAppointment, LabTestAppointmentSaveModel>()
                 .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Patient, opt => opt.Ignore())
-                .ForMember(dest => dest.Doctor, opt => opt.Ignore())
                 .ForMember(dest => dest.Appointment, opt => opt.Ignore())
                 .ForMember(dest => dest.LabTest, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore());
 
             CreateMap<LabTestAppointment, UpdateLabTestAppointmentDto>()
                 .ReverseMap()
-                .ForMember(dest => dest.Patient, opt => opt.Ignore())
-                .ForMember(dest => dest.Doctor, opt => opt.Ignore())
                 .ForMember(dest => dest.Appointment, opt => opt.Ignore())
                 .ForMember(dest => dest.LabTest, opt => opt.Ignore())
                 .ForMember(dest => dest.ConsultingRoom, opt => opt.Ignore());

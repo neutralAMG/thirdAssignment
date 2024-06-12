@@ -1,4 +1,4 @@
-﻿
+﻿@model thirdAssignment.Aplication.Models.Doctor.DoctorSaveModel
 
 @if (ViewBag.Message is not null)
 {
@@ -13,34 +13,34 @@
             <div class="card-body">
 
                 <section>
-                    <form method="post" asp-controller="User" asp-action="SaveUser">
+                    <form method="post" enctype="multipart/form-data" asp-controller="User" asp-action="SaveDoctor">
 
                         <div class="mb-3">
                             <label for="Name" class="form-label"> Name</label>
-                            <input type="text" name="Name" class="form-control" />
+                            <input  name="Name" class="form-control" />
                         </div>
                         <div class="mb-3">
                             <label for="LastName" class="form-label"> Last Name</label>
-                            <input type="text" name="LastName" class="form-control" />
+                            <input  name="LastName" class="form-control" />
                         </div>
                         <div class="mb-3">
                             <label for="EMailAddress" class="form-label"> EMail Address</label>
-                            <input type="text" name="EMailAddress" class="form-control" />
+                            <input  name="EMailAddress" class="form-control" />
                         </div>
 
                         <div class="mb-3">
                             <label for="PhoneNumber" class="form-label"> Phone Number</label>
-                            <input type="text" name="PhoneNumber" class="form-control" />
+                            <input  name="PhoneNumber" class="form-control" />
                         </div>
 
                         <div class="mb-3">
                             <label for="Cedula" class="form-label"> Cedula </label>
-                            <input type="text" name="Cedula" class="form-control" />
+                            <input  name="Cedula" class="form-control" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="ImgPath" class="form-label"> Image </label>
-                            <input type="file" name="ImgPath" class="form-control" />
+                            <label for="File" class="form-label"> Image </label>
+                            <input type="file"  name="File" required class="form-control" />
                         </div>
                         <div class="p-2">
                             <button asp-controller="Doctor" asp-action="SaveDoctor" class="btn btn-primary  float-end  p-2 "> Save </button>

@@ -13,7 +13,7 @@
             <div class="card-body">
 
                 <section>
-                    <form method="post" asp-controller="Patient" asp-action="EditPatient">
+                    <form method="post" enctype="multipart/form-data" asp-controller="Patient" asp-action="EditPatient">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                         <input type="type" name="Id" value="@Model.patientModel.Id" class="visually-hidden" />
@@ -66,8 +66,8 @@
                             <input type="date" name="BirthDate" value="@Model.patientModel.BirthDate.ToString("yyyy-MM-dd")" min="1900-01-01" max="2099-12-31" class="form-control" />
                         </div>
                         <div class="mb-3">
-                            <label for="img" class="form-label"> Image </label>
-                            <input type="file" name="img" value="@Model.patientModel.ImgPath" class="form-control" />
+                            <label for="File" class="form-label"> Image </label>
+                            <input type="file" name="File" value="@Model.patientModel.ImgPath" class="form-control" />
                         </div>
 
                         <div class="p-2">

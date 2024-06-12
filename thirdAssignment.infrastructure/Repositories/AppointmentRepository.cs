@@ -32,7 +32,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                Include(u => u.ConsultingRoom)
                .Include(a => a.Doctor)
                .Include(a => a.Patient)
-               .Include(a => a.labTestAppointments).Include(a => a.labTestAppointments).ThenInclude(l => l.LabTest)
+               .Include(a => a.labTestAppointments).ThenInclude(l => l.LabTest)
                .Include(a => a.AppointmentState)
                .FirstOrDefaultAsync( a => a.Id == id);
             }
@@ -49,18 +49,18 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                Include(u => u.ConsultingRoom)
                .Include(a => a.Doctor)
                .Include(a => a.Patient)
-               .Include(a => a.labTestAppointments)
+               .Include(a => a.labTestAppointments).ThenInclude(l => l.LabTest)
                 .Include(a => a.AppointmentState).ToListAsync();
             
         }
    
 
-        public override async Task Save(Appointment entity)
+        public override async Task<Appointment> Save(Appointment entity)
         {
             try
             {
                 entity.Name = $"Apointment for {entity.AppointmentDate} on {entity.AppointmentTime} ";
-                await base.Save(entity);
+              return  await base.Save(entity);
 
             }
             catch 
@@ -71,7 +71,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public override async Task Update(Appointment entity)
+        public override async Task<Appointment> Update(Appointment entity)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 AppointmentToBeUpdated.AppointmentStateId = entity.AppointmentStateId;
 
-                await base.Update(AppointmentToBeUpdated);
+               return await base.Update(AppointmentToBeUpdated);
 
             }
             catch

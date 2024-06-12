@@ -28,21 +28,25 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             return await _appContext.LabtestAppointments
                 .Where(u => u.ConsultingRoomId == id)
+                    .Include(l => l.Appointment)
+        .ThenInclude(a => a.Doctor)
+    .Include(l => l.Appointment)
+        .ThenInclude(a => a.Patient)
                 .Include(l => l.LabTest)
-                .Include(l => l.Doctor)
-                .Include(l => l.Appointment)
-                .Include(l => l.Patient)
                 .ToListAsync();
         }
         public async Task<List<LabTestAppointment>> GetAllPending(Guid id)
         {
-            return await _appContext.LabtestAppointments
+         var labtestAppointment =   await _appContext.LabtestAppointments
                 .Where(u => u.ConsultingRoomId == id && u.IsNotPending == false)
-                .Include(l => l.LabTest).Include(l => l.LabTest)
-                .Include(l => l.Doctor)
-                .Include(l => l.Appointment)
-                .Include(l => l.Patient)
+                           .Include(l => l.Appointment)
+        .ThenInclude(a => a.Doctor)
+    .Include(l => l.Appointment)
+        .ThenInclude(a => a.Patient)
+                .Include(l => l.LabTest)
                 .ToListAsync();
+
+            return labtestAppointment;
         }
         public override async Task<LabTestAppointment> GetById(Guid id)
         {
@@ -51,9 +55,11 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
        //         if (await Exits(u => u.Id != id)) return null;
 
                 return await _appContext.LabtestAppointments
-                        .Include(l => l.LabTest).Include(l => l.LabTest)
-                         .Include(l => l.Doctor)
-                         .Include(l => l.Appointment)
+                               .Include(l => l.Appointment)
+        .ThenInclude(a => a.Doctor)
+    .Include(l => l.Appointment)
+        .ThenInclude(a => a.Patient)
+                        .Include(l => l.LabTest)
                          .FirstOrDefaultAsync(l => l.Id == id);
                 //  return await base.GetById(id);
 
@@ -66,14 +72,18 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public override async Task Save(LabTestAppointment entity)
+        public override async Task<LabTestAppointment> Save(LabTestAppointment entity)
         {
             try
             {
+                
                 entity.Name = $" test's for the appointment {entity.AppointmetId}";
                 entity.IsNotPending = false;
                 entity.TestResult = "";
-                await base.Save(entity);
+                entity.AppointmetId = new Guid(entity.AppointmetId.ToString().ToUpperInvariant());
+                _appContext.LabtestAppointments.AddAsync(entity);
+                _appContext.SaveChanges();
+                return entity;
 
             }
             catch 
@@ -82,7 +92,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             }
         }
 
-        public override async Task Update(LabTestAppointment entity)
+        public override async Task<LabTestAppointment> Update(LabTestAppointment entity)
         {
             try
             {
@@ -94,7 +104,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 LabTestAppointmentToBeUpdated.IsNotPending = entity.IsNotPending;
 
-                await base.Update(LabTestAppointmentToBeUpdated);
+               return await base.Update(LabTestAppointmentToBeUpdated);
             }
             catch 
             {
@@ -120,13 +130,14 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public async Task<List<LabTestAppointment>> FilterByCedula(string cedulaa)
+        public async Task<List<LabTestAppointment>> FilterByCedula(string cedulaa, Guid id)
         {
-            return await _appContext.LabtestAppointments.Where(l => l.Patient.Cedula == cedulaa && l.IsNotPending == false)
+            return await _appContext.LabtestAppointments.Where(l => l.Appointment.Patient.Cedula == cedulaa && l.IsNotPending == false && l.ConsultingRoomId == id)
                           .Include(l => l.LabTest)
-                         .Include(l => l.Doctor)
-                         .Include(l => l.Appointment)
-                         .Include(l => l.Patient)
+                                    .Include(l => l.Appointment)
+        .ThenInclude(a => a.Doctor)
+    .Include(l => l.Appointment)
+        .ThenInclude(a => a.Patient)
                          .ToListAsync();
         }
 

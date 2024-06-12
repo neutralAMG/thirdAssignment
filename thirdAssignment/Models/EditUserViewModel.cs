@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using thirdAssignment.Aplication.Models;
+using thirdAssignment.Aplication.Models.User;
 
 namespace thirdAssignment.Presentation.Models
 {

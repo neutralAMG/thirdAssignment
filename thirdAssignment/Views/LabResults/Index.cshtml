@@ -1,13 +1,16 @@
-﻿@model List<thirdAssignment.Aplication.Models.LabTestAppointmentModel>
-
+﻿@model List<thirdAssignment.Aplication.Models.LabTestAppointment.LabTestAppointmentModel>
+@if (ViewBag.message is not null)
+{
+    <p class="alert-danger d-block text-center">@ViewBag.message</p>
+}
 <div class="container mt-5">
     <div class="d-flex justify-content-end mb-4">
         <div class="col-md-4">
             <form method="post" asp-controller="LabResults" asp-action="FilterByCedula" class="form-inline">
                 <div class="form-group mb-2">
-                    <input type="text" name="Cedula" class="form-control" placeholder="Enter the cedula to filter" />
+                    <input type="text" name="Cedula" class="form-control" placeholder="Enter the cedula to filter" />                
+                    <button type="submit" class="btn btn-primary  ml-2">Filter</button>
                 </div>
-                <button type="submit" class="btn btn-primary mb-2 ml-2">Filter</button>
             </form>
         </div>
     </div>
@@ -28,8 +31,8 @@
             @foreach (var labResult in Model)
             {
                 <div class="row align-items-center border-bottom py-2">
-                    <div class="col-md-3">@labResult.Patient.Name @labResult.Patient.LastName</div>
-                    <div class="col-md-2">@labResult.Patient.Cedula</div>
+                    <div class="col-md-3">@labResult.Appointment.Patient.Name @labResult.Appointment.Patient.LastName</div>
+                    <div class="col-md-2">@labResult.Appointment.Patient.Cedula</div>
                     <div class="col-md-2">@labResult.LabTest.Name</div>
                     <div class="col-md-2 text-right">
                         <a href="@Url.Action("EditLabTestResult", "LabResults", new { id = labResult.Id })" class="btn btn-outline-warning mr-2">Report Results</a>

@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using thirdAssignment.Aplication.Core;
 using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
-using thirdAssignment.Aplication.Models;
-using thirdAssignment.Aplication.Services;
-using thirdAssignment.Presentation.Utils.SessionHandler;
+using thirdAssignment.Aplication.Models.LabTestAppointment;
 using thirdAssignment.Presentation.Utils.UserValidations;
 
 namespace thirdAssignment.Presentation.Controllers
@@ -25,13 +22,14 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> Index()
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
             Result<List<LabTestAppointmentModel>> result = new();
             try
             {
-                var currentUser = HttpContext.Session.Get<UserModel>("user");
 
-                result = await _labTestAppointmentService.GetAllPending(currentUser.ConsultingRoom.Id);
+
+                result = await _labTestAppointmentService.GetAllPending();
 
                 if (!result.IsSuccess)
                 {
@@ -52,16 +50,15 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> FilterByCedula(string Cedula)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
             Result<List<LabTestAppointmentModel>> result = new();
             try
             {
-                var currentUser = HttpContext.Session.Get<UserModel>("user");
-
                 if (Cedula.IsNullOrEmpty())
                 {
-                    
-                    result = await _labTestAppointmentService.GetAllPending(currentUser.ConsultingRoom.Id);
+                    result = await _labTestAppointmentService.GetAllPending();
+                    ViewBag.Message = "Cedula was not enter";
                     return View("Index", result.Data);
                 }
                 result = await _labTestAppointmentService.FilterByCedula(Cedula);
@@ -70,7 +67,7 @@ namespace thirdAssignment.Presentation.Controllers
                 {
 
                 }
-                return View("Index", result.Data);
+                return View(result.Data);
 
             }
             catch
@@ -86,22 +83,22 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> SaveLabTestResult()
         {
 			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
-			return View();
+            return View();
         }
 
         // POST: LabResultsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveLabTestResult(SaveLabTestAppointmentDto saveDto)
+        public async Task<IActionResult> SaveLabTestResult(LabTestAppointmentSaveModel saveDto)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
-            Result<LabTestAppointmentModel> result = new();
+            Result<LabTestAppointmentSaveModel> result = new();
             try
             {
-
-                saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
 
                 result = await _labTestAppointmentService.Save(saveDto);
 
@@ -123,6 +120,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> EditLabTestResult(Guid id)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
             Result<LabTestAppointmentModel> result = new();
             try
@@ -149,11 +147,12 @@ namespace thirdAssignment.Presentation.Controllers
         // POST: LabResultsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditLabTestResult(Guid id, UpdateLabTestAppointmentDto updateDto)
+        public async Task<IActionResult> EditLabTestResult(Guid id, LabTestAppointmentSaveModel updateDto)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAssistent()) return RedirectToAction("index", "Home");
 
-            Result<LabTestAppointmentModel> result = new();
+            Result<LabTestAppointmentSaveModel> result = new();
             try
             {
 

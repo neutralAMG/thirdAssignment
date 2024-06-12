@@ -12,7 +12,7 @@ namespace thirdAssignment.Aplication.Dtos
         public string EMailAddress { get; set; }
     }
 
-    public record SaveDoctorDto : BaseDoctorDto
+    public record SaveDoctorModel : BaseDoctorDto
     {
 
         public Guid ConsultingRoomId { get; set; }

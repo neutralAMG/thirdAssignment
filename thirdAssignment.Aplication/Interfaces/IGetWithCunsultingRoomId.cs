@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Http;
 using thirdAssignment.Aplication.Core;
 
 namespace thirdAssignment.Aplication.Interfaces
@@ -9,6 +10,6 @@ namespace thirdAssignment.Aplication.Interfaces
     }
     public interface IGetWithCunsultingRoomIdInService<TViewModel> where TViewModel : class
     {
-        Task<Result<List<TViewModel>>> GetAll(Guid id);
+        Task<Result<List<TViewModel>>> GetAll();
     }
 }

@@ -8,10 +8,10 @@ using thirdAssignment.Domain.Entities;
 
 namespace thirdAssignment.Aplication.Core
 {
-    public class BaseService<TSaveDto, TUpdateDto, TViewModel, TEntity> : IBaseService<TSaveDto, TUpdateDto, TViewModel, TEntity>
+    public class BaseService<TSaveDto, TViewModel, TEntity> : IBaseService<TSaveDto,  TViewModel, TEntity>
 
         where TSaveDto : class
-        where TUpdateDto : class
+   
         where TViewModel : class
         where TEntity : class
     {
@@ -26,29 +26,6 @@ namespace thirdAssignment.Aplication.Core
             _mapper = mapper;
             _resultMessages = resultMessages;
         }
-
-
-
-        //public async Task<Result<List<TViewModel>>> GetAll(Guid id)
-        //{
-        //    Result<List<TViewModel>> result = new();
-        //    try
-        //    {
-        //        List<TEntity> usersGetted = await _baseRepository.GetAll(id);
-
-        //        result.Data = _mapper.Map<List<TViewModel>>(usersGetted);
-        //        result.Message = _resultMessages.ResultMessage[TypeOfOperation.GetAll][State.Success];
-
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        result.IsSuccess = false;
-        //        result.Message = _resultMessages.ResultMessage[TypeOfOperation.GetAll][State.Error];
-        //        return result;
-        //        throw;
-        //    }
-        //}
 
         public virtual async Task<Result<TViewModel>> GetById(Guid id)
         {
@@ -79,9 +56,9 @@ namespace thirdAssignment.Aplication.Core
             }
         }
 
-        public virtual async Task<Result<TViewModel>> Save(TSaveDto saveDto)
+        public virtual async Task<Result<TSaveDto>> Save(TSaveDto saveDto)
         {
-            Result<TViewModel> result = new();
+            Result<TSaveDto> result = new();
             try
             {
                 if (saveDto is null)
@@ -91,10 +68,18 @@ namespace thirdAssignment.Aplication.Core
                     return result;
                 }
 
-                TEntity SavedEntity = _mapper.Map<TEntity>(saveDto);
+                TEntity EntityToSave = _mapper.Map<TEntity>(saveDto);
 
-                await _baseRepository.Save(SavedEntity);
+                TEntity SavedEntity = await _baseRepository.Save(EntityToSave);
 
+                if (SavedEntity is null)
+                {
+                    result.IsSuccess = false;
+                    result.Message = _resultMessages.ResultMessage[TypeOfOperation.Save][State.Error];
+                    return result;
+                }
+
+                result.Data = _mapper.Map<TSaveDto>(SavedEntity);
 
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.Save][State.Success];
                 return result;
@@ -108,9 +93,9 @@ namespace thirdAssignment.Aplication.Core
             }
         }
 
-        public virtual async Task<Result<TViewModel>> Update(TUpdateDto UpdateDto)
+        public virtual async Task<Result<TSaveDto>> Update(TSaveDto UpdateDto)
         {
-            Result<TViewModel> result = new();
+            Result<TSaveDto> result = new();
             try
             {
                 if (UpdateDto is null)
@@ -119,8 +104,19 @@ namespace thirdAssignment.Aplication.Core
                     result.Message = _resultMessages.ResultMessage[TypeOfOperation.Update][State.Error];
                     return result;
                 }
-                TEntity UpdatedEntity = _mapper.Map<TEntity>(UpdateDto);
-                await _baseRepository.Update(UpdatedEntity);
+                TEntity EntityToUpdate = _mapper.Map<TEntity>(UpdateDto);
+
+               
+
+                TEntity UpdatedEntity = await _baseRepository.Update(EntityToUpdate);
+
+                if (UpdatedEntity is null)
+                {
+                    result.IsSuccess = false;
+                    result.Message = _resultMessages.ResultMessage[TypeOfOperation.Update][State.Error];
+                    return result;
+                }
+                result.Data = _mapper.Map<TSaveDto>(UpdatedEntity);
 
                 result.Message = _resultMessages.ResultMessage[TypeOfOperation.Update][State.Success];
                 return result;

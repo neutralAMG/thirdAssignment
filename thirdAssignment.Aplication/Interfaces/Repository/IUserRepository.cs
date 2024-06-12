@@ -8,7 +8,7 @@ namespace thirdAssignment.Aplication.Interfaces.Repository
     public interface IUserRepository : IBaseRepository<User>, IGetWithCunsultingRoomId<User>
     {
         Task<User> Login (string username);
-        Task Register(User entity);
+        Task<bool> Register(User entity);
 
 
     }

@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using thirdAssignment.Aplication.Core;
 using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
-using thirdAssignment.Aplication.Models;
-using thirdAssignment.Aplication.Services;
-using thirdAssignment.Presentation.Utils.SessionHandler;
+using thirdAssignment.Aplication.Models.LabTest;
 using thirdAssignment.Presentation.Utils.UserValidations;
 
 namespace thirdAssignment.Presentation.Controllers
@@ -24,13 +21,14 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> Index()
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
             Result<List<LabTestModel>> result = new();
             try
             {
-                var currentUser = HttpContext.Session.Get<UserModel>("user");
 
-                result = await _labTestService.GetAll(currentUser.ConsultingRoom.Id);
+
+                result = await _labTestService.GetAll();
 
                 if (!result.IsSuccess)
                 {
@@ -52,18 +50,20 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> SaveLabTest()
         {
 			if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
-			return View();
+            return View();
         }
 
         // POST: LabTestController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveLabTest(SaveLabTestDto saveDto)
+        public async Task<IActionResult> SaveLabTest(LabTestSaveModel saveDto)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
-            Result<LabTestModel> result = new();
+            Result<LabTestSaveModel> result = new();
             try
             {
                 if (!ModelState.IsValid)
@@ -71,7 +71,6 @@ namespace thirdAssignment.Presentation.Controllers
                     ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
                     return View();
                 }
-                saveDto.ConsultingRoomId = HttpContext.Session.Get<UserModel>("user").ConsultingRoom.Id;
 
                 result = await _labTestService.Save(saveDto);
 
@@ -93,6 +92,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> EditLabTest(Guid id)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
             Result<LabTestModel> result = new();
             try
@@ -119,18 +119,18 @@ namespace thirdAssignment.Presentation.Controllers
         // POST: LabTestController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditLabTest(Guid id, UpdateLabTestDto updateDto)
+        public async Task<IActionResult> EditLabTest(Guid id, LabTestSaveModel updateDto)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
-            Result<LabTestModel> result = new();
+            Result<LabTestSaveModel> result = new();
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    result = await _labTestService.GetById(id);
                     ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
-                    return View(result.Data);
+                    return View(await _labTestService.GetById(id));
                 }
 
                 result = await _labTestService.Update(updateDto);
@@ -155,6 +155,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> DeleteLabTest(Guid id)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
             Result<LabTestModel> result = new();
             try
@@ -183,6 +184,7 @@ namespace thirdAssignment.Presentation.Controllers
         public async Task<IActionResult> DeleteLabTest(Guid id, IFormCollection collection)
         {
             if (!_userValidations.HasUser()) return RedirectToAction("Login", "User");
+            if (!_userValidations.UserIsAdmin()) return RedirectToAction("index", "Home");
 
             Result<LabTestModel> result = new();
             try

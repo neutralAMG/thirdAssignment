@@ -1,9 +1,9 @@
-﻿using thirdAssignment.Aplication.Models;
-using thirdAssignment.Presentation.Utils.SessionHandler;
+﻿using thirdAssignment.Aplication.Models.User;
+using thirdAssignment.Aplication.Utils.SessionHandler;
 
 namespace thirdAssignment.Presentation.Utils.UserValidations
 {
-	public class UserValidations
+    public class UserValidations
 	{
 		private readonly IHttpContextAccessor _httpContext;
 
@@ -18,5 +18,15 @@ namespace thirdAssignment.Presentation.Utils.UserValidations
 		 return hasUser;
 		}
 
+        public bool UserIsAdmin()
+        {
+            bool userAdmin = _httpContext.HttpContext.Session.Get<UserModel>("user") .UserRol.Id == (int)Enums.UserRolsModel.Admin ? true : false;
+            return userAdmin;
+        }
+        public bool UserIsAssistent()
+        {
+            bool userAdmin = _httpContext.HttpContext.Session.Get<UserModel>("user").UserRol.Id == (int)Enums.UserRolsModel.Assistent ? true : false;
+            return userAdmin;
+        }
     }
 }

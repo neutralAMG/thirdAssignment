@@ -43,17 +43,16 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
            
         }
 
-        public override async Task Save(Patient entity)
+        public override async Task<Patient> Save(Patient entity)
         {
             try
             {
 
 
-                if (await Exits(u => u.Cedula == entity.Cedula)) return;
+                if (await Exits(u => u.Cedula == entity.Cedula)) return null;
 
-                if (await Exits(u => u.EMailAddress == entity.EMailAddress)) return;
 
-                await base.Save(entity);
+                return await base.Save(entity);
 
             }
             catch 
@@ -64,7 +63,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public override async Task Update(Patient entity)
+        public override async Task<Patient> Update(Patient entity)
         {
             try
             {
@@ -92,7 +91,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
                 PatientToBeUpdated.HasAllergies = entity.HasAllergies;
 
 
-                await base.Update(PatientToBeUpdated);
+                return await base.Update(PatientToBeUpdated);
             }
             catch 
             {

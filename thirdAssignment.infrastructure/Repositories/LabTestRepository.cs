@@ -48,13 +48,13 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
           
         }
 
-        public override async Task Save(LabTest entity)
+        public override async Task<LabTest> Save(LabTest entity)
         {
             try
             {
              //   if (await Exits(lt => lt.Name == entity.Name)) return;
 
-                await base.Save(entity);
+              return  await base.Save(entity);
 
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
         }
 
-        public override async Task Update(LabTest entity)
+        public override async Task<LabTest> Update(LabTest entity)
         {
             try
             {
@@ -76,8 +76,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
                 LabTestToBeUpdated.Description = entity.Description;
                 
-
-                await base.Update(LabTestToBeUpdated);
+              return await base.Update(LabTestToBeUpdated);
             }
             catch (Exception ex)
             {

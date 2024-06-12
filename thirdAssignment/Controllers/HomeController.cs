@@ -1,11 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
-using thirdAssignment.Aplication.Interfaces.Contracts;
-using thirdAssignment.Aplication.Models;
-using thirdAssignment.Models;
-using thirdAssignment.Presentation.Utils.SessionHandler;
 using thirdAssignment.Presentation.Utils.UserValidations;
 
 namespace thirdAssignment.Controllers
