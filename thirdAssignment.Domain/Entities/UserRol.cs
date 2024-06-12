@@ -1,7 +1,5 @@
 ﻿
 
-using thirdAssignment.Domain.Core;
-
 namespace thirdAssignment.Domain.Entities
 {
     public class UserRol

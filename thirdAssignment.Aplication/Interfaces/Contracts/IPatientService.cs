@@ -1,6 +1,5 @@
 ﻿
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Models.Patient;
 using thirdAssignment.Domain.Entities;
 

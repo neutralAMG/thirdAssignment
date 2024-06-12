@@ -16,14 +16,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-
-        //public override async Task<List<Doctor>> GetAll()
-        //{
-        //   return await base.GetAll();
-                
-        //        //_appContext.Doctors.
-        //        //Include(u => u.ConsultingRoom).ToListAsync();
-        //}
         public async Task<List<Doctor>> GetAll(Guid id)
         {
             return await _appContext.Doctors.Where(u => u.ConsultingRoomId == id).
@@ -34,7 +26,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-         //       if (await Exits(d => d.Id != id)) return null;
+
 
                 return await base.GetById(id);
             }
@@ -64,7 +56,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
             try
             {
-//                if (await Exits(d => d.Id != entity.Id)) return;
+
 
                 Doctor DoctorToBeUpdated = await GetById(entity.Id);
 
@@ -94,7 +86,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-       //         if (await Exits(u => u.Id != entity.Id)) return;
 
                 Doctor DoctorToBeDeleted = await GetById(entity.Id);
 

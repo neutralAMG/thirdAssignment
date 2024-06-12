@@ -1,7 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using thirdAssignment.Aplication.Core;
-using thirdAssignment.Domain.Entities;
+
 
 namespace thirdAssignment.Aplication.Models.User
 {

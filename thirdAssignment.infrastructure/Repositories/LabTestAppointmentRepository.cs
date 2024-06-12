@@ -52,8 +52,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-       //         if (await Exits(u => u.Id != id)) return null;
-
+   
                 return await _appContext.LabtestAppointments
                                .Include(l => l.Appointment)
         .ThenInclude(a => a.Doctor)
@@ -61,9 +60,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         .ThenInclude(a => a.Patient)
                         .Include(l => l.LabTest)
                          .FirstOrDefaultAsync(l => l.Id == id);
-                //  return await base.GetById(id);
 
-                //_appContext.LabtestAppointments.FirstOrDefaultAsync(u => u.Id == id);
             }
             catch 
             {
@@ -96,7 +93,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-              //  if (await Exits(u => u.Id != entity.Id)) return;
 
                 LabTestAppointment LabTestAppointmentToBeUpdated = await GetById(entity.Id);
 
@@ -117,7 +113,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-             //   if (await Exits(u => u.Id != entity.Id)) return;
 
                 LabTestAppointment LabTestAppointmentToBeDeleted = await GetById(entity.Id);
 

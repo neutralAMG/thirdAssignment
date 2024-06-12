@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Models.LabTestAppointment;
 using thirdAssignment.Presentation.Utils.UserValidations;

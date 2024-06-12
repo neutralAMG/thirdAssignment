@@ -1,10 +1,7 @@
 ﻿
 using AutoMapper;
-using thirdAssignment.Aplication.Interfaces;
-using thirdAssignment.Aplication.Interfaces.Repository;
-using thirdAssignment.Aplication.Models;
 using thirdAssignment.Aplication.Utils.ResultMessages;
-using thirdAssignment.Domain.Entities;
+
 
 namespace thirdAssignment.Aplication.Core
 {

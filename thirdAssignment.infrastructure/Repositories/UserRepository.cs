@@ -16,13 +16,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        //public override async Task<List<User>> GetAll()
-        //{
-
-        //    return await _appContext.Users.
-        //        Include(u => u.ConsultingRoom).Include(u => u.UserRol).ToListAsync();
-        //}
-
         public override async Task<User> GetById(Guid id)
         {
             try
@@ -88,7 +81,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
 
             try
             {
-             //   if (await Exits(u => u.UserName == entity.UserName)) return null;
+
 
                 User UserToBeUpdated = await GetById(entity.Id);
 

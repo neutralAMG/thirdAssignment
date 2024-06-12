@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using thirdAssignment.Aplication.Models.Appointment;
-using thirdAssignment.Aplication.Models.Doctor;
 using thirdAssignment.Aplication.Models.LabTest;
-using thirdAssignment.Aplication.Models.Patient;
+
 
 
 namespace thirdAssignment.Aplication.Models.LabTestAppointment

@@ -17,16 +17,12 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         }
 
 
-        //public override async Task<List<Appointment>> GetAll()
-        //{
-        //    return await base.GetAll();
-        //}
 
         public override async Task<Appointment> GetById(Guid id)
         {
             try
             {
-          //      if (await Exits(d => d.Id != id)) return null;
+
 
                 return await _appContext.Appointments.
                Include(u => u.ConsultingRoom)
@@ -75,10 +71,8 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-                //   if (await Exits(u => u.Id != entity.Id)) return;
 
                 Appointment AppointmentToBeUpdated = await GetById(entity.Id);
-
 
                 AppointmentToBeUpdated.AppointmentStateId = entity.AppointmentStateId;
 

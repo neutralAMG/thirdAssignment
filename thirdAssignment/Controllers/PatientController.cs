@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
-using thirdAssignment.Aplication.Models.Doctor;
 using thirdAssignment.Aplication.Models.Patient;
-using thirdAssignment.Aplication.Services;
 using thirdAssignment.Presentation.Models;
 using thirdAssignment.Presentation.Utils;
 using thirdAssignment.Presentation.Utils.UserValidations;
@@ -89,26 +85,11 @@ namespace thirdAssignment.Presentation.Controllers
                     return View(_generateSelectList.GenereteCheckBoxList());
                 }
 
-
-                //if (img != null)
-                //{
-                //    var path = Path.Combine(root, DateTime.Now.Ticks.ToString() + Path.GetExtension(img.FileName));
-                //    using (var stream = new FileStream(path, FileMode.Create))
-                //    {
-                //        await img.CopyToAsync(stream);
-                //    }
-                //    saveDto.ImgPath = path;
-                //}
-
-
                 saveDto.IsSmoker =  smokes == 1 ? true : false;
 
                 saveDto.HasAllergies = hasAlergies == 1? true : false;
 
                 result = await _patientService.Save(saveDto);
-
-
-
 
                 PatienSaveModel savedDoctor = result.Data;
 

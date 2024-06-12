@@ -36,7 +36,5 @@ namespace thirdAssignment.Aplication.Models.Doctor
         [DataType(DataType.Upload)]
         public IFormFile? File { get; set; }
 
-        
-        //  public ConsultingRoomModel ConsultingRoom { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Models.User;
 using thirdAssignment.Presentation.Models;

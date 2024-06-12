@@ -2,11 +2,9 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Aplication.Models.Doctor;
-using thirdAssignment.Aplication.Models.Patient;
 using thirdAssignment.Aplication.Models.User;
 using thirdAssignment.Aplication.Utils.ResultMessages;
 using thirdAssignment.Aplication.Utils.SessionHandler;

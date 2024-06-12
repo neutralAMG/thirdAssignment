@@ -1,6 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using thirdAssignment.Aplication.Core;
+
 
 namespace thirdAssignment.Aplication.Models.Doctor
 {
@@ -32,6 +32,6 @@ namespace thirdAssignment.Aplication.Models.Doctor
         public string? ImgPath { get; set; }
 
          public Guid ConsultingRoomId { get; set; }
-        //  public ConsultingRoomModel ConsultingRoom { get; set; }
+
     }
 }

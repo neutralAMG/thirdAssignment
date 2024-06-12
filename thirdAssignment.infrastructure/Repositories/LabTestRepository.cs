@@ -16,14 +16,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
             _appContext = appContext;
         }
 
-        //public override async Task<List<LabTest>> GetAll()
-        //{
-        //    return await base.GetAll();
-                
-        //        //_appContext.LabTests.
-        //        //Include(lt => lt.ConsultingRoom).ToListAsync();
-        //}
-
         public async Task<List<LabTest>> GetAll(Guid id)
         {
             return await _appContext.LabTests.Where(u => u.ConsultingRoomId == id).
@@ -34,11 +26,9 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-              //  if (await Exits(lt => lt.Id != id)) return null;
 
                 return await base.GetById(id);
                     
-                    //_appContext.LabTests.FirstOrDefaultAsync(u => u.Id == id);
             }
             catch (Exception ex)
             {
@@ -52,7 +42,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-             //   if (await Exits(lt => lt.Name == entity.Name)) return;
+
 
               return  await base.Save(entity);
 
@@ -68,7 +58,7 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-           //     if (await Exits(lt => lt.Id != entity.Id)) return;
+
 
                 LabTest LabTestToBeUpdated = await GetById(entity.Id);
 
@@ -89,7 +79,6 @@ namespace thirdAssignment.Infrastructure.Persistence.Repositories
         {
             try
             {
-           //     if (await Exits(lt => lt.Id != entity.Id)) return;
 
                 LabTest LabTestToBeDeleted = await GetById(entity.Id);
 

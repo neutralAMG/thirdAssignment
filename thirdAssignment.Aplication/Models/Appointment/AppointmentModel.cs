@@ -1,6 +1,5 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using thirdAssignment.Aplication.Core;
 using thirdAssignment.Aplication.Models.Doctor;
 using thirdAssignment.Aplication.Models.LabTestAppointment;
 using thirdAssignment.Aplication.Models.Patient;

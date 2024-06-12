@@ -11,7 +11,6 @@ namespace thirdAssignment.Aplication.Models.LabTest
         public string Name { get; set; }
         public Guid Id { get; set; }
         public string? Description { get; set; }
-        //   public Guid ConsultingRoomId { get; set; }
-        //    public ConsultingRoomModel ConsultingRoom { get; set; }
+
     }
 }

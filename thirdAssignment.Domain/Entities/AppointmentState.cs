@@ -1,5 +1,4 @@
 ﻿
-using thirdAssignment.Domain.Core;
 
 namespace thirdAssignment.Domain.Entities
 {

@@ -6,9 +6,7 @@ namespace thirdAssignment.Aplication.Core
         where TViewModel : class
         where TEntity : class
     {
-       // Task<bool> Exits(Func<TEntity, bool> filter);
-      //  Task<Result<List<TEntity>>> GetAll();
-    //    Task<Result<List<TViewModel>>> GetAll(Guid id);
+
         Task<Result<TViewModel>> GetById(Guid id); 
         Task<Result<TSaveDto>> Save(TSaveDto saveDto);
         Task<Result<TSaveDto>> Update(TSaveDto saveDto);

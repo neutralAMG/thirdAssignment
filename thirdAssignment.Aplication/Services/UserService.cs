@@ -2,7 +2,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Aplication.Models.User;
@@ -150,32 +149,6 @@ namespace thirdAssignment.Aplication.Services
             saveDto.ConsultingRoomName = currentUser.ConsultingRoomName;
             return await base.Save(saveDto);
 
-            //Result<UserModel> result = new();
-            //try
-            //{
-            //    if (saveDto is null)
-            //    {
-            //        result.IsSuccess = false;
-            //        result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
-            //        return result;
-            //    }
-
-            //    User SavedEntity = _mapper.Map<User>(saveDto);
-
-               
-            //    await _userRepository.Save(SavedEntity);
-
-
-            //    result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Success];
-            //    return result;
-            //}
-            //catch
-            //{
-            //    result.IsSuccess = false;
-            //    result.Message = _messages.ResultMessage[TypeOfOperation.Save][State.Error];
-            //    return result;
-            //    throw;
-            //}
         }
 
 		public virtual async Task<Result<UserSaveModel>> Update(UserSaveModel UpdateDto)

@@ -1,5 +1,4 @@
 ﻿using thirdAssignment.Aplication.Models;
-using thirdAssignment.Domain.Entities;
 using thirdAssignment.Presentation.Utils.Enums;
 
 namespace thirdAssignment.Presentation.Models

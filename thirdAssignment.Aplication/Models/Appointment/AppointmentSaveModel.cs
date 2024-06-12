@@ -1,6 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
-using thirdAssignment.Aplication.Models.LabTest;
+
 
 namespace thirdAssignment.Aplication.Models.Appointment
 {

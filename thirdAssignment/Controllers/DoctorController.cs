@@ -1,11 +1,8 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Models.Doctor;
-using thirdAssignment.Aplication.Models.Patient;
-using thirdAssignment.Aplication.Services;
 using thirdAssignment.Presentation.Utils.UserValidations;
 
 namespace thirdAssignment.Presentation.Controllers
@@ -73,29 +70,12 @@ namespace thirdAssignment.Presentation.Controllers
             try
             {
 
-
-
-                //if (img != null)
-                //{
-                //    var path = Path.Combine(root,DateTime.Now.Ticks.ToString() + Path.GetExtension(img.FileName));
-                //     using(var stream = new FileStream(path, FileMode.Create))
-                //    {
-                //        await img.CopyToAsync(stream);
-                //    }
-                 
-                //}
-         
-
                 if (!ModelState.IsValid)
                 {
                     ViewBag.message = ModelState.Values.SelectMany(v => v.Errors).First().ErrorMessage;
                     return View(new DoctorSaveModel());
                 }
-                //if (saveDto.ImgPath.IsNullOrEmpty()){
-                //    ViewBag.message = "the Imge field is requierd";
-                //    return View();
-                //}
-                
+
                  result = await _doctorService.Save(saveDto);
 
                  DoctorSaveModel savedDoctor = result.Data;

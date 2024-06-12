@@ -2,7 +2,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using thirdAssignment.Aplication.Core;
-using thirdAssignment.Aplication.Dtos;
 using thirdAssignment.Aplication.Interfaces.Contracts;
 using thirdAssignment.Aplication.Interfaces.Repository;
 using thirdAssignment.Aplication.Models.Appointment;

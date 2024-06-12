@@ -46,6 +46,5 @@ namespace thirdAssignment.Aplication.Models.Patient
         [DataType(DataType.Date)]
         public DateOnly BirthDate { get; set; }
 
-        //  public ConsultingRoomModel ConsultingRoom { get; set; }
     }
 }
