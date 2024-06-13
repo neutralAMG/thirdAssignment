@@ -12,8 +12,6 @@ namespace thirdAssignment.Aplication.Models.LabTest
 
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "the name is a requierd field")]
-        [DataType(DataType.Text)]
         public string? Description { get; set; }
 
         public Guid ConsultingRoomId { get; set; }
